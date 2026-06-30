@@ -1,0 +1,110 @@
+[
+  {
+    "_id": "e922079fb09a708e8afb73df",
+    "name": "مشرف النظام",
+    "email": "admin@admin.ae",
+    "password": "$2a$10$2/ZRrc29FnG8rMYRscyOFO4EZ7S67mh52HEbNHPsG8q4s6iHRrEey",
+    "phone": "+971509999999",
+    "role": "admin",
+    "createdAt": "2026-06-30T04:19:17.728Z"
+  },
+  {
+    "_id": "665753f6ad3fee47e8c663f1",
+    "name": "أحمد حسن",
+    "email": "ahmed@tutor.ae",
+    "password": "$2a$10$AFuHN/dcWL2VY6s73WLe9eTGGE053Aq85/SoKHRosPmE1UOPS.nR6",
+    "phone": "+971501234567",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:17.731Z"
+  },
+  {
+    "_id": "10e86d365d8e92671570dbd5",
+    "name": "فاطمة المنصوري",
+    "email": "fatima@tutor.ae",
+    "password": "$2a$10$EZn3fcj/l9VbTFjy34Ir8eLdUac3fTPpn5fD72op8g5PLrCyxCkMu",
+    "phone": "+971502345678",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:17.799Z"
+  },
+  {
+    "_id": "cfdb98ab20024c661464ceaf",
+    "name": "عمر خالد",
+    "email": "omar@tutor.ae",
+    "password": "$2a$10$99Z3qrULWwDMPzwEs9A8a.N9dbOkY9sANlRvMqcy/8yKdTnra0B4S",
+    "phone": "+971503456789",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:17.903Z"
+  },
+  {
+    "_id": "856edda7199a09571c0c45fb",
+    "name": "سارة محمد",
+    "email": "sara@tutor.ae",
+    "password": "$2a$10$Pg8aGy3Y/cFs2YD31qd3Du0FmCNnmXUxsufqTshPaHHsXO8Y9GdwS",
+    "phone": "+971504567890",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:17.982Z"
+  },
+  {
+    "_id": "7fc5d3db1f866f219cc9ccca",
+    "name": "عبدالله الزعابي",
+    "email": "abdulla@tutor.ae",
+    "password": "$2a$10$y9DaOrN4WtC3rFF0KsDk2uaaToo1F/ETez45rOfwyKwCey7NhI5hO",
+    "phone": "+971505678901",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:18.046Z"
+  },
+  {
+    "_id": "b9ff245d0ae5797d2d8ffabf",
+    "name": "مريم الكتبي",
+    "email": "mariam@tutor.ae",
+    "password": "$2a$10$asusDz3KPk/rUM50PPZxqeNSxP12TBiZ5w3uYaQ9hWGo8FJdQKsdK",
+    "phone": "+971506789012",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:18.108Z"
+  },
+  {
+    "_id": "6a4f596d53e8dcffad0cc6da",
+    "name": "حسين علي",
+    "email": "hussein@tutor.ae",
+    "password": "$2a$10$qX4xNh3Dn/vjKCb0NZN/negjTnNCSRR7eH3OV3kPK4WTE1ZiF1K.K",
+    "phone": "+971507890123",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:18.183Z"
+  },
+  {
+    "_id": "e9a896b48233533ace0e37d6",
+    "name": "نورة الفلاسي",
+    "email": "noura@tutor.ae",
+    "password": "$2a$10$9jERE7AJ6j8l12stQvHK.e7IJYKL3lkCnKXW7gOfKKrrR63Gnwx9q",
+    "phone": "+971508901234",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:18.252Z"
+  },
+  {
+    "_id": "e6f7c3c62b33e4f570840329",
+    "name": "خالد العامري",
+    "email": "khalid@tutor.ae",
+    "password": "$2a$10$5XxtWqVNbqKuRNymCpx/guLy9dVWo8fjxBSb0i46wPqAxYC2e.P8K",
+    "phone": "+971509012345",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:18.318Z"
+  },
+  {
+    "_id": "74353ad087dbffcd9d943eb7",
+    "name": "ليلى إبراهيم",
+    "email": "layla@tutor.ae",
+    "password": "$2a$10$.bK67XcSs8gNXelJTVIxvu02iVfkUx9x34.pTqKYwK0gd6tAisGda",
+    "phone": "+971500123456",
+    "role": "tutor",
+    "createdAt": "2026-06-30T04:19:18.392Z"
+  },
+  {
+    "_id": "8b23c08beffc19dd1b4be49e",
+    "name": "طالب تجريبي",
+    "email": "student@test.ae",
+    "password": "$2a$10$F7puDonDWkZQ4k4v.3YrsO.iR92zdMBhmGy67cyp2Et8VZsXhP8P2",
+    "phone": "+971500000000",
+    "role": "student",
+    "createdAt": "2026-06-30T04:19:18.522Z"
+  }
+]

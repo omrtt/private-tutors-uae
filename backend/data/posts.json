@@ -1,0 +1,169 @@
+[
+  {
+    "_id": "dcd8c31fce1067a975195a47",
+    "content": "🔥 درس جديد في التفاضل والتكامل متاح الآن! سجل واحجز جلستك.",
+    "media": [
+      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600"
+    ],
+    "likes": [
+      "10e86d365d8e92671570dbd5",
+      "cfdb98ab20024c661464ceaf"
+    ],
+    "comments": [
+      {
+        "user": "10e86d365d8e92671570dbd5",
+        "text": "منشور رائع! استمر 👍",
+        "createdAt": "2026-06-30T03:19:18.404Z",
+        "_id": "036fd45dff5479a620219dfb"
+      },
+      {
+        "user": "cfdb98ab20024c661464ceaf",
+        "text": "مفيد جداً، شكراً لمشاركتنا 🙏",
+        "createdAt": "2026-06-30T03:49:18.404Z",
+        "_id": "e2460d5f6019cf7527cbfac5"
+      },
+      {
+        "_id": "cc399e048ea45f9e8119e875",
+        "user": "8b23c08beffc19dd1b4be49e",
+        "text": "بيلات",
+        "createdAt": "2026-06-30T04:24:45.571Z"
+      }
+    ],
+    "tutor": "665753f6ad3fee47e8c663f1",
+    "createdAt": "2026-06-30T04:19:18.404Z"
+  },
+  {
+    "_id": "772b74c4932aad470a513ea0",
+    "content": "🎉 ألف مبروك لطلابي على نتائجهم الممتازة في اختبار EMSAT! فخور بكم جميعاً.",
+    "media": [
+      "https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=600"
+    ],
+    "likes": [],
+    "comments": [],
+    "tutor": "10e86d365d8e92671570dbd5",
+    "createdAt": "2026-06-30T04:19:18.416Z"
+  },
+  {
+    "_id": "ad4796a3c343ea7ccc5cf90f",
+    "content": "📚 نصائح للمذاكرة الفعالة: 1️⃣ حدد أهدافك 2️⃣ نظم وقتك 3️⃣ خذ فترات راحة 4️⃣ راجع باستمرار. شارك مع زملائك!",
+    "media": [
+      "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600"
+    ],
+    "likes": [],
+    "comments": [],
+    "tutor": "cfdb98ab20024c661464ceaf",
+    "createdAt": "2026-06-30T04:19:18.419Z"
+  },
+  {
+    "_id": "b5e9055176b42ceaa18c2612",
+    "content": "⭐ تجربتي مع تدريس اللغة الإنجليزية لأكثر من ٧ سنوات. السر هو الممارسة اليومية والثقة بالنفس. من مستعد للبدء؟",
+    "media": [
+      "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600"
+    ],
+    "likes": [
+      "7fc5d3db1f866f219cc9ccca",
+      "b9ff245d0ae5797d2d8ffabf"
+    ],
+    "comments": [],
+    "tutor": "856edda7199a09571c0c45fb",
+    "createdAt": "2026-06-30T04:19:18.434Z"
+  },
+  {
+    "_id": "081cdaa2de8c30e9e6df98e7",
+    "content": "🧪 تجربة كيميائية مسلية اليوم! تعلمنا عن التفاعلات الكيميائية بطريقة عملية. العلم متعة حقيقية.",
+    "media": [
+      "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600"
+    ],
+    "likes": [],
+    "comments": [
+      {
+        "user": "b9ff245d0ae5797d2d8ffabf",
+        "text": "منشور رائع! استمر 👍",
+        "createdAt": "2026-06-30T03:19:18.439Z",
+        "_id": "b967464359a72ac52cf341e7"
+      },
+      {
+        "user": "6a4f596d53e8dcffad0cc6da",
+        "text": "مفيد جداً، شكراً لمشاركتنا 🙏",
+        "createdAt": "2026-06-30T03:49:18.439Z",
+        "_id": "9a3ce7306fd7d43c93d0c33a"
+      }
+    ],
+    "tutor": "7fc5d3db1f866f219cc9ccca",
+    "createdAt": "2026-06-30T04:19:18.440Z"
+  },
+  {
+    "_id": "3687e083a80c1654a3bd23b7",
+    "content": "💻 ورشة عمل جديدة في أساسيات البرمجة بلغة بايثون. من الصفر إلى الاحتراف. سجل الآن الأماكن محدودة!",
+    "media": [
+      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600"
+    ],
+    "likes": [],
+    "comments": [],
+    "tutor": "b9ff245d0ae5797d2d8ffabf",
+    "createdAt": "2026-06-30T04:19:18.443Z"
+  },
+  {
+    "_id": "245f28253ced313c8f8dd7c1",
+    "content": "🏆 حصل ثلاثة من طلابي على منح دراسية في جامعات مرموقة. التعليم هو المفتاح لمستقبل أفضل.",
+    "media": [
+      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600"
+    ],
+    "likes": [
+      "e9a896b48233533ace0e37d6",
+      "e6f7c3c62b33e4f570840329"
+    ],
+    "comments": [],
+    "tutor": "6a4f596d53e8dcffad0cc6da",
+    "createdAt": "2026-06-30T04:19:18.446Z"
+  },
+  {
+    "_id": "f211f9067d88e3a52440467f",
+    "content": "📖 جلسة مراجعة شاملة لاختبار SAT القادم. غطينا جميع الأقسام مع تمارين تفاعلية. استعدوا للتميز!",
+    "media": [
+      "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=600"
+    ],
+    "likes": [],
+    "comments": [],
+    "tutor": "e9a896b48233533ace0e37d6",
+    "createdAt": "2026-06-30T04:19:18.449Z"
+  },
+  {
+    "_id": "0bc69f8e5fe58c6f3914296e",
+    "content": "🎯 ١٠ نصائح لتحسين مهارات الكتابة باللغة العربية الفصحى. مهم جداً للطلاب في المراحل المتقدمة.",
+    "media": [
+      "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600"
+    ],
+    "likes": [],
+    "comments": [
+      {
+        "user": "74353ad087dbffcd9d943eb7",
+        "text": "منشور رائع! استمر 👍",
+        "createdAt": "2026-06-30T03:19:18.460Z",
+        "_id": "a4b82726f67613f8ae98b83a"
+      },
+      {
+        "user": "665753f6ad3fee47e8c663f1",
+        "text": "مفيد جداً، شكراً لمشاركتنا 🙏",
+        "createdAt": "2026-06-30T03:49:18.460Z",
+        "_id": "a6533f87b8756dc5848124a2"
+      }
+    ],
+    "tutor": "e6f7c3c62b33e4f570840329",
+    "createdAt": "2026-06-30T04:19:18.460Z"
+  },
+  {
+    "_id": "2e9792bcb34c6531fd6cff2c",
+    "content": "🌍 درس اليوم كان عن الحضارة الإسلامية ومساهماتها في العلوم. فخورون بتاريخنا العظيم.",
+    "media": [
+      "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600"
+    ],
+    "likes": [
+      "665753f6ad3fee47e8c663f1",
+      "10e86d365d8e92671570dbd5"
+    ],
+    "comments": [],
+    "tutor": "74353ad087dbffcd9d943eb7",
+    "createdAt": "2026-06-30T04:19:18.465Z"
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "_id": "e3f083e10d2098d5e577d518",
+    "user": "f76b0a309831d45519ee0cf8",
+    "type": "new_booking",
+    "message": "حجز جديد من طالب تجريبي",
+    "bookingId": "329a097342554fe230e53424",
+    "read": false,
+    "createdAt": "2026-06-28T14:40:31.586Z"
+  },
+  {
+    "_id": "c4b64b38a639e4d90092b2d5",
+    "user": "f76b0a309831d45519ee0cf8",
+    "type": "payment_received",
+    "message": "تم استلام الدفع للحجز 329a097342554fe230e53424",
+    "bookingId": "329a097342554fe230e53424",
+    "read": false,
+    "createdAt": "2026-06-28T14:40:33.119Z"
+  },
+  {
+    "_id": "47598f932d6e1605579107b0",
+    "user": "264bbe2b322e888f33a2e0b4",
+    "type": "payment_success",
+    "message": "تم الدفع بنجاح بقيمة 240 درهم",
+    "bookingId": "329a097342554fe230e53424",
+    "read": false,
+    "createdAt": "2026-06-28T14:40:33.122Z"
+  },
+  {
+    "_id": "fdc8e30f8fde881af52d9711",
+    "user": "f76b0a309831d45519ee0cf8",
+    "type": "new_booking",
+    "message": "حجز جديد من طالب تجريبي",
+    "bookingId": "53d254fc996ca47b71cce173",
+    "read": false,
+    "createdAt": "2026-06-28T14:49:45.246Z"
+  },
+  {
+    "_id": "9766818fff4ef814c414f42e",
+    "user": "c2a3e8f8da43ff54bb41f8d6",
+    "type": "new_booking",
+    "message": "حجز جديد من طالب تجريبي",
+    "bookingId": "a2980cbccaaee49ad8b16d10",
+    "read": false,
+    "createdAt": "2026-06-28T14:52:48.703Z"
+  },
+  {
+    "_id": "0637d529aec8c6ec88dde775",
+    "user": "2a34d9e3bd7425a1b01cf014",
+    "type": "new_booking",
+    "message": "حجز جديد من طالب تجريبي",
+    "bookingId": "d8d4ba0848744b8b6ef5d514",
+    "read": false,
+    "createdAt": "2026-06-29T08:00:35.971Z"
+  },
+  {
+    "_id": "0541f9ea37fd4404287476b3",
+    "user": "0fba6ce3baeccc8d5287cc3e",
+    "type": "new_booking",
+    "message": "حجز جديد من طالب تجريبي",
+    "bookingId": "d36ce76b5d651f0505a57995",
+    "read": false,
+    "createdAt": "2026-06-29T10:25:27.515Z"
+  },
+  {
+    "_id": "fd784c55483ab69cbb17d57e",
+    "user": "0fba6ce3baeccc8d5287cc3e",
+    "type": "payment_received",
+    "message": "تم استلام الدفع للحجز d36ce76b5d651f0505a57995",
+    "bookingId": "d36ce76b5d651f0505a57995",
+    "read": false,
+    "createdAt": "2026-06-29T10:25:53.946Z"
+  },
+  {
+    "_id": "f08229de5fbb2c7c4ac1b045",
+    "user": "870c429f33f94acfa7be3eff",
+    "type": "payment_success",
+    "message": "تم الدفع بنجاح بقيمة 150 درهم",
+    "bookingId": "d36ce76b5d651f0505a57995",
+    "read": false,
+    "createdAt": "2026-06-29T10:25:53.952Z"
+  },
+  {
+    "_id": "e7946855a467573fd45a0e2d",
+    "user": "2a34d9e3bd7425a1b01cf014",
+    "type": "new_booking",
+    "message": "حجز جديد من طالب تجريبي",
+    "bookingId": "a9b0d1b2bd146c51df4d289c",
+    "read": false,
+    "createdAt": "2026-06-29T10:40:06.897Z"
+  }
+]

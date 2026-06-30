@@ -1,0 +1,24 @@
+[
+  {
+    "_id": "18dbcb02c9cb9cbc807b49e6",
+    "bookingId": "329a097342554fe230e53424",
+    "student": "264bbe2b322e888f33a2e0b4",
+    "tutor": "a6ad7ece72c7898244bbb8e0",
+    "amount": 240,
+    "method": "card",
+    "status": "completed",
+    "createdAt": "2026-06-28T14:40:31.594Z",
+    "processedAt": "2026-06-28T14:40:33.101Z"
+  },
+  {
+    "_id": "ee43e073159393deab740bce",
+    "bookingId": "d36ce76b5d651f0505a57995",
+    "student": "870c429f33f94acfa7be3eff",
+    "tutor": "bda3840f7c9567c6e4e46983",
+    "amount": 150,
+    "method": "card",
+    "status": "completed",
+    "createdAt": "2026-06-29T10:25:52.402Z",
+    "processedAt": "2026-06-29T10:25:53.921Z"
+  }
+]

@@ -1,0 +1,315 @@
+[
+  {
+    "_id": "21a519bdba691d9b74e9e579",
+    "user": "665753f6ad3fee47e8c663f1",
+    "bio": "مدرّس رياضيات وفيزياء بخبرة تزيد عن 10 سنوات.",
+    "subjects": [
+      "الرياضيات",
+      "الفيزياء"
+    ],
+    "qualifications": [
+      "دكتوراه في الرياضيات",
+      "ماجستير فيزياء"
+    ],
+    "experience": 10,
+    "ratePerHour": 150,
+    "emirate": "دبي",
+    "languages": [
+      "العربية",
+      "الإنجليزية"
+    ],
+    "education": "دكتوراه، جامعة الإمارات",
+    "specializedTests": [
+      "ALCPT",
+      "SAT",
+      "IGCSE"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 5,
+    "numReviews": 19,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:17.735Z"
+  },
+  {
+    "_id": "52f75cd7fe42f18d27ee9f71",
+    "user": "10e86d365d8e92671570dbd5",
+    "bio": "متحدثة أصلية بالعربية، ومدرّسة إنجليزية معتمدة.",
+    "subjects": [
+      "اللغة الإنجليزية",
+      "اللغة العربية"
+    ],
+    "qualifications": [
+      "CELTA",
+      "بكالوريوس أدب إنجليزي"
+    ],
+    "experience": 7,
+    "ratePerHour": 120,
+    "emirate": "أبوظبي",
+    "languages": [
+      "العربية",
+      "الإنجليزية"
+    ],
+    "education": "بكالوريوس، جامعة الإمارات",
+    "specializedTests": [
+      "IELTS",
+      "TOEFL",
+      "IGCSE"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 4.3,
+    "numReviews": 19,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:17.810Z"
+  },
+  {
+    "_id": "8580e4823a594aa2656a9225",
+    "user": "cfdb98ab20024c661464ceaf",
+    "bio": "متخصص في الكيمياء والأحياء للمرحلة الثانوية والجامعية.",
+    "subjects": [
+      "الكيمياء",
+      "الأحياء"
+    ],
+    "qualifications": [
+      "ماجستير كيمياء حيوية",
+      "بكالوريوس تربية"
+    ],
+    "experience": 5,
+    "ratePerHour": 130,
+    "emirate": "الشارقة",
+    "languages": [
+      "العربية",
+      "الإنجليزية"
+    ],
+    "education": "ماجستير، جامعة الشارقة",
+    "specializedTests": [
+      "ALCPT",
+      "IGCSE"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 3.4,
+    "numReviews": 11,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:17.916Z"
+  },
+  {
+    "_id": "fcab0d5f220e6d65e981e0d1",
+    "user": "856edda7199a09571c0c45fb",
+    "bio": "مهندسة برمجيات تدرّس علوم الحاسوب والبرمجة.",
+    "subjects": [
+      "علوم الحاسوب",
+      "البرمجة"
+    ],
+    "qualifications": [
+      "بكالوريوس علوم حاسوب",
+      "AWS معتمد"
+    ],
+    "experience": 8,
+    "ratePerHour": 200,
+    "emirate": "دبي",
+    "languages": [
+      "الإنجليزية",
+      "العربية"
+    ],
+    "education": "بكالوريوس، جامعة خليفة",
+    "specializedTests": [
+      "ALCPT",
+      "IGCSE"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 3.1,
+    "numReviews": 20,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:17.988Z"
+  },
+  {
+    "_id": "193e5431dc3c1abf52bf9a2a",
+    "user": "7fc5d3db1f866f219cc9ccca",
+    "bio": "مدرّس رياضيات لجميع المستويات حتى الجامعة.",
+    "subjects": [
+      "الرياضيات",
+      "الرياضيات المتقدمة"
+    ],
+    "qualifications": [
+      "بكالوريوس رياضيات"
+    ],
+    "experience": 4,
+    "ratePerHour": 100,
+    "emirate": "عجمان",
+    "languages": [
+      "العربية",
+      "الإنجليزية"
+    ],
+    "education": "بكالوريوس، جامعة عجمان",
+    "specializedTests": [
+      "ALCPT",
+      "SAT",
+      "IGCSE"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 3.9,
+    "numReviews": 12,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:18.051Z"
+  },
+  {
+    "_id": "33ee6b0c8f6f288484a33321",
+    "user": "b9ff245d0ae5797d2d8ffabf",
+    "bio": "متخصصة في اللغة العربية والتربية الإسلامية.",
+    "subjects": [
+      "اللغة العربية",
+      "التربية الإسلامية"
+    ],
+    "qualifications": [
+      "ماجستير دراسات إسلامية",
+      "بكالوريوس لغة عربية"
+    ],
+    "experience": 6,
+    "ratePerHour": 100,
+    "emirate": "رأس الخيمة",
+    "languages": [
+      "العربية"
+    ],
+    "education": "ماجستير، جامعة الشارقة",
+    "specializedTests": [
+      "ALCPT"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 3.2,
+    "numReviews": 1,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:18.121Z"
+  },
+  {
+    "_id": "0d2ce3e74cc2ade1bd60d50b",
+    "user": "6a4f596d53e8dcffad0cc6da",
+    "bio": "مهندس محترف يدرّس الفيزياء والمواد الهندسية.",
+    "subjects": [
+      "الفيزياء",
+      "الهندسة"
+    ],
+    "qualifications": [
+      "دكتوراه هندسة",
+      "ماجستير فيزياء"
+    ],
+    "experience": 12,
+    "ratePerHour": 180,
+    "emirate": "دبي",
+    "languages": [
+      "الإنجليزية",
+      "العربية"
+    ],
+    "education": "دكتوراه، الجامعة الأمريكية في الشارقة",
+    "specializedTests": [
+      "ALCPT",
+      "SAT",
+      "IGCSE"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 3,
+    "numReviews": 17,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:18.188Z"
+  },
+  {
+    "_id": "0c4efab2cb53cdb5c46124db",
+    "user": "e9a896b48233533ace0e37d6",
+    "bio": "مدرّسة لغات بخبرة تدريس دولية.",
+    "subjects": [
+      "اللغة الإنجليزية",
+      "الفرنسية"
+    ],
+    "qualifications": [
+      "ماجستير لغويات",
+      "DELF"
+    ],
+    "experience": 9,
+    "ratePerHour": 140,
+    "emirate": "أبوظبي",
+    "languages": [
+      "الإنجليزية",
+      "العربية",
+      "الفرنسية"
+    ],
+    "education": "ماجستير، جامعة السوربون",
+    "specializedTests": [
+      "IELTS",
+      "TOEFL"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 4.6,
+    "numReviews": 8,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:18.259Z"
+  },
+  {
+    "_id": "27ebacc7defd175eaefff43e",
+    "user": "e6f7c3c62b33e4f570840329",
+    "bio": "مدرّس رياضيات واقتصاد بجداول مرنة.",
+    "subjects": [
+      "الرياضيات",
+      "الاقتصاد"
+    ],
+    "qualifications": [
+      "ماجستير إدارة أعمال",
+      "بكالوريوس اقتصاد"
+    ],
+    "experience": 6,
+    "ratePerHour": 110,
+    "emirate": "عجمان",
+    "languages": [
+      "العربية",
+      "الإنجليزية"
+    ],
+    "education": "ماجستير، كلية لندن للأعمال",
+    "specializedTests": [
+      "ALCPT",
+      "SAT",
+      "IGCSE"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 4.8,
+    "numReviews": 10,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:18.333Z"
+  },
+  {
+    "_id": "a24aa4e1085fbe07e6ede506",
+    "user": "74353ad087dbffcd9d943eb7",
+    "bio": "مدرّسة علوم شغوفة تجعل التعلم ممتعاً.",
+    "subjects": [
+      "العلوم",
+      "الأحياء"
+    ],
+    "qualifications": [
+      "بكالوريوس أحياء",
+      "دبلوم تدريس"
+    ],
+    "experience": 3,
+    "ratePerHour": 90,
+    "emirate": "الفجيرة",
+    "languages": [
+      "العربية",
+      "الإنجليزية"
+    ],
+    "education": "بكالوريوس، جامعة الفجيرة",
+    "specializedTests": [
+      "ALCPT",
+      "IGCSE"
+    ],
+    "isVerified": true,
+    "teachingMode": "both",
+    "rating": 4.4,
+    "numReviews": 1,
+    "isAvailable": true,
+    "createdAt": "2026-06-30T04:19:18.398Z"
+  }
+]
