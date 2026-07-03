@@ -1,9 +1,19 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
+
+axios.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    const msg = err.response?.data?.message || err.message || 'حدث خطأ غير متوقع';
+    if (err.response?.status !== 401) toast.error(msg);
+    return Promise.reject(err);
+  }
+);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -21,8 +31,8 @@ export function AuthProvider({ children }) {
     } else setLoading(false);
   }, [token]);
 
-  const login = async (email, password) => {
-    const res = await axios.post('/api/auth/login', { email, password });
+  const login = async (phone, password) => {
+    const res = await axios.post('/api/auth/login', { phone, password });
     localStorage.setItem('token', res.data.token);
     setToken(res.data.token);
     setUser(res.data.user);

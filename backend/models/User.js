@@ -7,6 +7,7 @@ const User = {
   async findOne(query) { return col.findOne(query); },
   async findById(id) { return col.findById(id); },
   async findByIdAndUpdate(id, data) { return col.findByIdAndUpdate(id, data); },
+  async findByIdAndDelete(id) { return col.findByIdAndDelete(id); },
   async findByEmail(email) { return col.findOne({ email }); },
   async update(id, data) {
     if (data.password) {

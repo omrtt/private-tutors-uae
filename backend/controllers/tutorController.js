@@ -9,10 +9,10 @@ exports.createTutorProfile = async (req, res) => {
 
     const tutor = await Tutor.create({ ...req.body, user: req.user._id, isAvailable: true });
     await User.findByIdAndUpdate(req.user._id, { role: 'tutor' });
-    const populated = Collection.ref('users', tutor, 'user', ['password']);
+    const populated = await Collection.ref('users', tutor, 'user', ['password']);
     res.status(201).json(populated);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -20,10 +20,10 @@ exports.getTutorProfile = async (req, res) => {
   try {
     const tutor = await Tutor.findOne({ user: req.user._id });
     if (!tutor) return res.status(404).json({ message: 'Tutor profile not found' });
-    const populated = Collection.ref('users', tutor, 'user', ['password']);
+    const populated = await Collection.ref('users', tutor, 'user', ['password']);
     res.json(populated);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -31,20 +31,21 @@ exports.updateTutorProfile = async (req, res) => {
   try {
     const tutor = await Tutor.findOneAndUpdate({ user: req.user._id }, req.body);
     if (!tutor) return res.status(404).json({ message: 'Tutor profile not found' });
-    const populated = Collection.ref('users', tutor, 'user', ['password']);
+    const populated = await Collection.ref('users', tutor, 'user', ['password']);
     res.json(populated);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 exports.getAllTutors = async (req, res) => {
   try {
-    const { subject, emirate, minRate, maxRate, minRating, teachingMode, sort, search, page = 1, limit = 12 } = req.query;
-    const filter = { isAvailable: true };
+    const { subject, emirate, area, minRate, maxRate, minRating, teachingMode, sort, search, page = 1, limit = 12 } = req.query;
+    const filter = { isAvailable: true, isVerified: true };
 
     if (subject) filter.subjects = { $regex: subject, $options: 'i' };
     if (emirate) filter.emirate = emirate;
+    if (area) filter.area = area;
     if (minRate || maxRate) {
       filter.ratePerHour = {};
       if (minRate) filter.ratePerHour.$gte = Number(minRate);
@@ -76,7 +77,7 @@ exports.getAllTutors = async (req, res) => {
       limit: Number(limit),
     });
 
-    const populated = Collection.ref('users', result.docs, 'user', ['password']);
+    const populated = await Collection.ref('users', result.docs, 'user', ['password']);
 
     res.json({
       tutors: populated,
@@ -85,7 +86,7 @@ exports.getAllTutors = async (req, res) => {
       total: result.total,
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -93,9 +94,9 @@ exports.getTutorById = async (req, res) => {
   try {
     const tutor = await Tutor.findById(req.params.id);
     if (!tutor) return res.status(404).json({ message: 'Tutor not found' });
-    const populated = Collection.ref('users', tutor, 'user', ['password']);
+    const populated = await Collection.ref('users', tutor, 'user', ['password']);
     res.json(populated);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };

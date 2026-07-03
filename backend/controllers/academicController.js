@@ -1,5 +1,4 @@
 const AcademicRecord = require('../models/AcademicRecord');
-const { Collection } = require('../db/jsonDb');
 
 exports.getMyRecords = async (req, res) => {
   try {
@@ -7,7 +6,7 @@ exports.getMyRecords = async (req, res) => {
     records.reverse();
     res.json(records);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -23,7 +22,7 @@ exports.createRecord = async (req, res) => {
     });
     res.status(201).json(record);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -37,7 +36,7 @@ exports.updateRecord = async (req, res) => {
     if (!record) return res.status(404).json({ message: 'Record not found' });
     res.json(record);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -47,6 +46,6 @@ exports.deleteRecord = async (req, res) => {
     if (!record) return res.status(404).json({ message: 'Record not found' });
     res.json({ message: 'Record deleted' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };

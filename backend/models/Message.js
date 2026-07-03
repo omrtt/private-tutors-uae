@@ -6,16 +6,17 @@ const Message = {
   async create(data) { return col.insertOne(data); },
 
   async find(senderId, receiverId) {
-    return col.find({
+    const docs = await col.find({
       $or: [
         { sender: senderId, receiver: receiverId },
         { sender: receiverId, receiver: senderId },
       ],
     });
+    return docs.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   },
 
   async findConversations(userId) {
-    const messages = col.all();
+    const messages = await col.all();
     const pairs = new Map();
     for (const msg of messages) {
       if (msg.sender === userId || msg.receiver === userId) {

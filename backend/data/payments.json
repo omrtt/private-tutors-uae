@@ -1,24 +1,90 @@
 [
   {
-    "_id": "18dbcb02c9cb9cbc807b49e6",
-    "bookingId": "329a097342554fe230e53424",
-    "student": "264bbe2b322e888f33a2e0b4",
-    "tutor": "a6ad7ece72c7898244bbb8e0",
-    "amount": 240,
-    "method": "card",
-    "status": "completed",
-    "createdAt": "2026-06-28T14:40:31.594Z",
-    "processedAt": "2026-06-28T14:40:33.101Z"
-  },
-  {
-    "_id": "ee43e073159393deab740bce",
-    "bookingId": "d36ce76b5d651f0505a57995",
-    "student": "870c429f33f94acfa7be3eff",
-    "tutor": "bda3840f7c9567c6e4e46983",
+    "_id": "seed000100",
+    "bookingId": "seed000001",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "665753f6ad3fee47e8c663f1",
     "amount": 150,
     "method": "card",
     "status": "completed",
-    "createdAt": "2026-06-29T10:25:52.402Z",
-    "processedAt": "2026-06-29T10:25:53.921Z"
+    "createdAt": "2026-06-28T04:43:50.386Z",
+    "processedAt": "2026-06-28T05:43:50.386Z"
+  },
+  {
+    "_id": "seed000101",
+    "bookingId": "seed000002",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "10e86d365d8e92671570dbd5",
+    "amount": 240,
+    "method": "card",
+    "status": "completed",
+    "createdAt": "2026-06-27T16:43:50.386Z",
+    "processedAt": "2026-06-27T17:43:50.386Z"
+  },
+  {
+    "_id": "seed000102",
+    "bookingId": "seed000003",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "cfdb98ab20024c661464ceaf",
+    "amount": 390,
+    "method": "card",
+    "status": "completed",
+    "createdAt": "2026-06-27T04:43:50.386Z",
+    "processedAt": "2026-06-27T05:43:50.386Z"
+  },
+  {
+    "_id": "seed000105",
+    "bookingId": "seed000006",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "665753f6ad3fee47e8c663f1",
+    "amount": 450,
+    "method": "card",
+    "status": "completed",
+    "createdAt": "2026-06-25T16:43:50.386Z",
+    "processedAt": "2026-06-25T17:43:50.386Z"
+  },
+  {
+    "_id": "seed000106",
+    "bookingId": "seed000007",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "10e86d365d8e92671570dbd5",
+    "amount": 120,
+    "method": "card",
+    "status": "completed",
+    "createdAt": "2026-06-25T04:43:50.386Z",
+    "processedAt": "2026-06-25T05:43:50.386Z"
+  },
+  {
+    "_id": "seed000107",
+    "bookingId": "seed000008",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "cfdb98ab20024c661464ceaf",
+    "amount": 260,
+    "method": "card",
+    "status": "completed",
+    "createdAt": "2026-06-24T16:43:50.386Z",
+    "processedAt": "2026-06-24T17:43:50.386Z"
+  },
+  {
+    "_id": "seed000110",
+    "bookingId": "seed000011",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "665753f6ad3fee47e8c663f1",
+    "amount": 300,
+    "method": "card",
+    "status": "completed",
+    "createdAt": "2026-06-23T04:43:50.386Z",
+    "processedAt": "2026-06-23T05:43:50.386Z"
+  },
+  {
+    "_id": "seed000111",
+    "bookingId": "seed000012",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "10e86d365d8e92671570dbd5",
+    "amount": 360,
+    "method": "card",
+    "status": "completed",
+    "createdAt": "2026-06-22T16:43:50.386Z",
+    "processedAt": "2026-06-22T17:43:50.386Z"
   }
 ]

@@ -1,0 +1,107 @@
+[
+  {
+    "_id": "test001",
+    "subject": "الرياضيات",
+    "questions": [
+      { "id": 1, "question": "ما ناتج ٢٥ + ١٧؟", "options": ["٣٢", "٤٢", "٥٢", "٤٠"], "correct": 1 },
+      { "id": 2, "question": "ما ناتج ١٤ × ٣؟", "options": ["٤٢", "٣٢", "٥٢", "٤٤"], "correct": 0 },
+      { "id": 3, "question": "إذا كان س = ٧، فما قيمة ٢س + ٣؟", "options": ["١٠", "١٤", "١٧", "٢١"], "correct": 2 },
+      { "id": 4, "question": "ما مساحة مربع طول ضلعه ٥ سم؟", "options": ["١٠ سم²", "٢٠ سم²", "٢٥ سم²", "١٥ سم²"], "correct": 2 },
+      { "id": 5, "question": "٣/٤ + ١/٢ = ؟", "options": ["٣/٦", "٥/٤", "١/٤", "٤/٦"], "correct": 1 },
+      { "id": 6, "question": "ما جذر ١٤٤؟", "options": ["١٠", "١١", "١٢", "١٣"], "correct": 2 },
+      { "id": 7, "question": "إذا كان قطر دائرة ١٠ سم، فما محيطها؟ (ط = ٣.١٤)", "options": ["٣١.٤ سم", "١٥.٧ سم", "١٠ سم", "٢٠ سم"], "correct": 0 },
+      { "id": 8, "question": "ما ناتج (س + ٣)(س - ٢)؟", "options": ["س² + س - ٦", "س² + ٥س - ٦", "س² - س - ٦", "س² - ٥س + ٦"], "correct": 0 },
+      { "id": 9, "question": "حل المعادلة: ٣س - ٧ = ٢س + ٥", "options": ["س = ١٢", "س = ٢", "س = -٢", "س = ١٤"], "correct": 0 },
+      { "id": 10, "question": "ما احتمال ظهور عدد فردي عند رمي حجر نرد مرة واحدة؟", "options": ["١/٦", "١/٣", "١/٢", "٢/٣"], "correct": 2 },
+      { "id": 11, "question": "إذا كان لوغاريتم ١٠٠ للأساس ١٠ = ؟", "options": ["١", "٢", "١٠", "١٠٠"], "correct": 1 },
+      { "id": 12, "question": "ما قيمة المشتقة الأولى للدالة د(س) = ٣س² + ٢س؟", "options": ["٦س + ٢", "٣س + ٢", "٦س² + ٢", "٣س² + ٢"], "correct": 0 },
+      { "id": 13, "question": "متوسط الأعداد ٨، ١٢، ٥، ١٥ هو؟", "options": ["٨", "١٠", "١٢", "١٥"], "correct": 1 },
+      { "id": 14, "question": "ما ناتج ٠.٢٥ × ٠.٤؟", "options": ["٠.٠١", "٠.١", "١", "٠.٠٠١"], "correct": 1 },
+      { "id": 15, "question": "كم زاوية قائمة في المربع؟", "options": ["٢", "٣", "٤", "١"], "correct": 2 }
+    ]
+  },
+  {
+    "_id": "test002",
+    "subject": "اللغة الإنجليزية",
+    "questions": [
+      { "id": 1, "question": "What is the past tense of 'go'?", "options": ["goed", "went", "gone", "going"], "correct": 1 },
+      { "id": 2, "question": "Choose the correct sentence:", "options": ["He don't like coffee", "He doesn't likes coffee", "He doesn't like coffee", "He not like coffee"], "correct": 2 },
+      { "id": 3, "question": "What does 'beautiful' mean?", "options": ["قبيح", "جميل", "سريع", "بطيء"], "correct": 1 },
+      { "id": 4, "question": "Which word is a synonym for 'happy'?", "options": ["sad", "angry", "joyful", "tired"], "correct": 2 },
+      { "id": 5, "question": "I ___ to school every day.", "options": ["go", "goes", "went", "going"], "correct": 0 },
+      { "id": 6, "question": "What is the plural of 'child'?", "options": ["childs", "childes", "children", "child"], "correct": 2 },
+      { "id": 7, "question": "She is ___ than her sister.", "options": ["tall", "taller", "tallest", "more tall"], "correct": 1 },
+      { "id": 8, "question": "If I ___ rich, I would travel the world.", "options": ["am", "was", "were", "be"], "correct": 2 },
+      { "id": 9, "question": "The book ___ on the table.", "options": ["is", "are", "am", "be"], "correct": 0 },
+      { "id": 10, "question": "What does 'enormous' mean?", "options": ["صغير", "ضخم", "متوسط", "ضعيف"], "correct": 1 },
+      { "id": 11, "question": "Which is the correct spelling?", "options": ["recieve", "receive", "receeve", "receave"], "correct": 1 },
+      { "id": 12, "question": "He has been studying ___ three hours.", "options": ["since", "for", "during", "in"], "correct": 1 },
+      { "id": 13, "question": "The opposite of 'ancient' is:", "options": ["old", "modern", "broken", "heavy"], "correct": 1 },
+      { "id": 14, "question": "___ you like some tea?", "options": ["Would", "Do", "Are", "Have"], "correct": 0 },
+      { "id": 15, "question": "I wish I ___ there yesterday.", "options": ["was", "were", "had been", "have been"], "correct": 2 }
+    ]
+  },
+  {
+    "_id": "test003",
+    "subject": "الفيزياء",
+    "questions": [
+      { "id": 1, "question": "ما وحدة قياس القوة؟", "options": ["نيوتن", "جول", "واط", "باسكال"], "correct": 0 },
+      { "id": 2, "question": "قانون نيوتن الأول ينص على أن:", "options": ["القوة تساوي الكتلة × التسارع", "لكل فعل رد فعل مساوٍ له في المقدار ومضاد في الاتجاه", "الجسم الساكن يبقى ساكناً ما لم تؤثر عليه قوة خارجية", "الطاقة لا تفنى ولا تستحدث"], "correct": 2 },
+      { "id": 3, "question": "سرعة الضوء في الفراغ تقريباً:", "options": ["٣×١٠⁶ م/ث", "٣×١٠⁸ م/ث", "٣×١٠¹⁰ م/ث", "٣×١٠⁴ م/ث"], "correct": 1 },
+      { "id": 4, "question": "ما وحدة قياس المقاومة الكهربائية؟", "options": ["فولط", "أمبير", "أوم", "واط"], "correct": 2 },
+      { "id": 5, "question": "الطاقة الحركية لجسم تتناسب طردياً مع:", "options": ["سرعته", "مربع سرعته", "كتلته", "مسافته"], "correct": 1 },
+      { "id": 6, "question": "الموجات الكهرومغناطيسية التي لها أقصر طول موجي:", "options": ["أشعة تحت الحمراء", "موجات الراديو", "أشعة غاما", "الضوء المرئي"], "correct": 2 },
+      { "id": 7, "question": "قانون أوم ينص على أن:", "options": ["V = IR", "F = ma", "E = mc²", "P = IV"], "correct": 0 },
+      { "id": 8, "question": "الضغط = القوة / المساحة، ما وحدة قياسه؟", "options": ["نيوتن", "جول", "باسكال", "واط"], "correct": 2 },
+      { "id": 9, "question": "عدد الذرات في جزيء الماء H₂O:", "options": ["٢", "٣", "٤", "١"], "correct": 1 },
+      { "id": 10, "question": "العدسة التي تجمع الأشعة الضوئية:", "options": ["محدبة", "مقعرة", "أسطوانية", "مستوية"], "correct": 0 },
+      { "id": 11, "question": "درجة غليان الماء عند ضغط جوي عادي:", "options": ["٥٠°م", "٩٠°م", "١٠٠°م", "١٢٠°م"], "correct": 2 },
+      { "id": 12, "question": "التسارع هو:", "options": ["السرعة × الزمن", "تغير السرعة / الزمن", "المسافة / الزمن", "القوة / الكتلة"], "correct": 1 },
+      { "id": 13, "question": "جهاز قياس الجهد الكهربائي:", "options": ["أميتر", "فولتميتر", "أومميتر", "واطميتر"], "correct": 1 },
+      { "id": 14, "question": "الصوت لا ينتشر في:", "options": ["الهواء", "الماء", "الفراغ", "الحديد"], "correct": 2 },
+      { "id": 15, "question": "الانكسار هو:", "options": ["انعكاس الضوء", "تغير اتجاه الضوء عند انتقاله بين وسطين", "تفرق الضوء", "تشتت الضوء"], "correct": 1 }
+    ]
+  },
+  {
+    "_id": "test004",
+    "subject": "اللغة العربية",
+    "questions": [
+      { "id": 1, "question": "الفعل الماضي من 'يكتب':", "options": ["يكتب", "كتب", "كاتب", "مكتوب"], "correct": 1 },
+      { "id": 2, "question": "\"الرحمن\" اسم:", "options": ["مرفوع", "منصوب", "مجرور", "مبني"], "correct": 0 },
+      { "id": 3, "question": "جمع كلمة 'معلم':", "options": ["معلمون", "معلمين", "معلمات", "معالم"], "correct": 0 },
+      { "id": 4, "question": "الحرف الناسخ الذي يفيد التشبيه:", "options": ["إن", "أن", "كأن", "لكن"], "correct": 2 },
+      { "id": 5, "question": "المبتدأ مرفوع دائماً. (صواب أم خطأ)", "options": ["صواب", "خطأ"], "correct": 0 },
+      { "id": 6, "question": "ما إعراب 'الطالب مجتهد'؟", "options": ["الطالب: مبتدأ مرفوع، مجتهد: خبر مرفوع", "الطالب: فاعل مرفوع، مجتهد: مفعول به", "الطالب: مبتدأ منصوب، مجتهد: خبر منصوب", "الطالب: مضاف إليه"], "correct": 0 },
+      { "id": 7, "question": "مرادف كلمة 'شجاع':", "options": ["جبان", "قوي", "جريء", "كبير"], "correct": 2 },
+      { "id": 8, "question": "ضد كلمة 'نور':", "options": ["نار", "ظلام", "شمس", "قمر"], "correct": 1 },
+      { "id": 9, "question": "الجملة الاسمية تبدأ بـ:", "options": ["فعل", "اسم", "حرف", "ضمير"], "correct": 1 },
+      { "id": 10, "question": "ما نوع الهمزة في كلمة 'استخرج'؟", "options": ["همزة قطع", "همزة وصل", "همزة متوسطة", "همزة متطرفة"], "correct": 1 },
+      { "id": 11, "question": "جملة 'قرأ الطالب الكتاب' هي جملة:", "options": ["اسمية", "فعلية", "شرطية", "استفهامية"], "correct": 1 },
+      { "id": 12, "question": "علامة جر الاسم الممنوع من الصرف:", "options": ["الكسرة", "الفتحة", "الضمة", "السكون"], "correct": 1 },
+      { "id": 13, "question": "جذر كلمة 'مدرسة':", "options": ["درس", "مدر", "درسة", "مدرس"], "correct": 0 },
+      { "id": 14, "question": "التاء المربوطة تكتب (ة) وتنطق (هاء) عند الوقف. (صواب أم خطأ)", "options": ["صواب", "خطأ"], "correct": 0 },
+      { "id": 15, "question": "من حروف العطف:", "options": ["في", "ثم", "عن", "على"], "correct": 1 }
+    ]
+  },
+  {
+    "_id": "test005",
+    "subject": "علوم الحاسوب",
+    "questions": [
+      { "id": 1, "question": "ما الذي يمثل الذاكرة المؤقتة في الحاسوب؟", "options": ["ROM", "RAM", "CPU", "SSD"], "correct": 1 },
+      { "id": 2, "question": "لغة تنسيق صفحات الويب:", "options": ["Python", "HTML", "CSS", "JavaScript"], "correct": 1 },
+      { "id": 3, "question": "قاعدة البيانات هي:", "options": ["مجموعة من الصور", "مجموعة منظمة من البيانات", "برنامج محاسبة", "نظام تشغيل"], "correct": 1 },
+      { "id": 4, "question": "ماذا تعمل CPU؟", "options": ["تخزين البيانات", "معالجة البيانات", "عرض البيانات", "طباعة البيانات"], "correct": 1 },
+      { "id": 5, "question": "البايت الواحد يساوي:", "options": ["٤ بت", "٨ بت", "١٦ بت", "٣٢ بت"], "correct": 1 },
+      { "id": 6, "question": "أي من التالي هو نظام تشغيل؟", "options": ["Python", "Windows", "Excel", "Chrome"], "correct": 1 },
+      { "id": 7, "question": "في أي طبقة من TCP/IP يعمل HTTP؟", "options": ["الطبقة المادية", "طبقة الإنترنت", "طبقة النقل", "طبقة التطبيقات"], "correct": 3 },
+      { "id": 8, "question": "SQL تستخدم لـ:", "options": ["تصميم واجهات", "إدارة قواعد البيانات", "برمجة الألعاب", "تحرير الصور"], "correct": 1 },
+      { "id": 9, "question": "الخوارزمية هي:", "options": ["جهاز إلكتروني", "سلسلة من الخطوات لحل مشكلة", "لغة برمجة", "نظام تشغيل"], "correct": 1 },
+      { "id": 10, "question": "أي لغة برمجة تستخدم عادة لتحليل البيانات؟", "options": ["PHP", "Python", "HTML", "CSS"], "correct": 1 },
+      { "id": 11, "question": "SSD هو نوع من:", "options": ["الذاكرة", "التخزين", "المعالجة", "الشبكة"], "correct": 1 },
+      { "id": 12, "question": "API تعني:", "options": ["تطبيق برمجي", "واجهة برمجة تطبيقات", "بروتوكول إنترنت", "قاعدة بيانات"], "correct": 1 },
+      { "id": 13, "question": "أي من التالي ليس لغة برمجة؟", "options": ["Java", "JavaScript", "HTML", "C++"], "correct": 2 },
+      { "id": 14, "question": "DNS يحول:", "options": ["الأرقام إلى نصوص", "أسماء النطاقات إلى عناوين IP", "الملفات إلى صور", "النصوص إلى أرقام"], "correct": 1 },
+      { "id": 15, "question": "الـ Firewall يستخدم لـ:", "options": ["تسريع الإنترنت", "الحماية من الاختراق", "تحرير الصور", "إدارة الملفات"], "correct": 1 }
+    ]
+  }
+]

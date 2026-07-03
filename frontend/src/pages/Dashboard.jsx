@@ -1,33 +1,37 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import {
   FaBookmark, FaChalkboardTeacher, FaStar, FaUser, FaClock,
   FaCheckCircle, FaTimesCircle, FaHourglassHalf, FaChartLine,
   FaMoneyBillWave, FaBell, FaComments, FaCalendarAlt, FaArrowUp,
   FaPlusCircle, FaSearch, FaUserPlus, FaChartBar, FaUsers,
   FaGraduationCap, FaBookOpen, FaTrash, FaEdit, FaArrowLeft,
-  FaVideo, FaGlobe, FaRss, FaPaperPlane
+  FaVideo, FaGlobe, FaRss, FaPaperPlane, FaShieldAlt
 } from 'react-icons/fa';
 import { FiEdit3 } from 'react-icons/fi';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import SEO from '../components/SEO';
 import Avatar from '../components/Avatar';
 import StatCard from '../components/StatCard';
-
-const statusConfig = {
-  pending: { color: 'text-yellow-600', bg: 'bg-yellow-50 dark:bg-yellow-500/10', border: 'border-yellow-200 dark:border-yellow-800', dot: 'bg-yellow-400', bar: 'bg-yellow-400', label: 'قيد الانتظار', icon: FaHourglassHalf },
-  confirmed: { color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-200 dark:border-emerald-800', dot: 'bg-emerald-400', bar: 'bg-emerald-400', label: 'مؤكّد', icon: FaCheckCircle },
-  completed: { color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-500/10', border: 'border-blue-200 dark:border-blue-800', dot: 'bg-blue-400', bar: 'bg-blue-400', label: 'مكتمل', icon: FaCheckCircle },
-  cancelled: { color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-500/10', border: 'border-red-200 dark:border-red-800', dot: 'bg-red-400', bar: 'bg-red-400', label: 'ملغي', icon: FaTimesCircle },
-};
+import EmptyState from '../components/EmptyState';
+import toast from 'react-hot-toast';
 
 const statusProgress = { pending: 25, confirmed: 50, completed: 100, cancelled: 100 };
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const { user } = useAuth();
+  const statusConfig = {
+    pending: { color: 'text-yellow-600', bg: 'bg-yellow-50 dark:bg-yellow-500/10', border: 'border-yellow-200 dark:border-yellow-800', dot: 'bg-yellow-400', bar: 'bg-yellow-400', label: t('dashboard.pending'), icon: FaHourglassHalf },
+    confirmed: { color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-200 dark:border-emerald-800', dot: 'bg-emerald-400', bar: 'bg-emerald-400', label: t('dashboard.confirmed'), icon: FaCheckCircle },
+    completed: { color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-500/10', border: 'border-blue-200 dark:border-blue-800', dot: 'bg-blue-400', bar: 'bg-blue-400', label: t('dashboard.completed'), icon: FaCheckCircle },
+    cancelled: { color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-500/10', border: 'border-red-200 dark:border-red-800', dot: 'bg-red-400', bar: 'bg-red-400', label: t('dashboard.cancelled'), icon: FaTimesCircle },
+  };
+  if (user?.role === 'admin') return <Navigate to="/admin" />;
   const [bookings, setBookings] = useState([]);
   const [tutorProfile, setTutorProfile] = useState(null);
   const [notifications, setNotifications] = useState([]);
@@ -97,6 +101,19 @@ export default function Dashboard() {
     } catch {}
   };
 
+  const handleTrialRefund = async (bookingId) => {
+    if (!window.confirm(t('trial.requestRefund'))) return;
+    try {
+      await axios.post(`/api/bookings/${bookingId}/trial-refund`);
+      toast.success(t('trial.refundSuccess'));
+      // Refresh bookings
+      const res = await axios.get('/api/bookings/my');
+      setBookings(res.data);
+    } catch (err) {
+      toast.error(err.response?.data?.message || t('trial.refundError'));
+    }
+  };
+
   const handleDashboardPost = async () => {
     if (!newPost.trim()) return;
     setPosting(true);
@@ -106,6 +123,21 @@ export default function Dashboard() {
       setNewPostMedia('');
     } catch {} finally { setPosting(false); }
   };
+
+  // Trial stats
+  const trialBookings = bookings.filter(b => b.isTrial);
+  const trialUniqueStudents = [...new Set(trialBookings.map(b => String(b.student?._id || b.student)))];
+  const returningTrialStudents = trialUniqueStudents.filter(id =>
+    bookings.some(b => !b.isTrial && String(b.student?._id || b.student) === id)
+  );
+  const trialConversionRate = trialUniqueStudents.length > 0
+    ? Math.round(returningTrialStudents.length / trialUniqueStudents.length * 100) : 0;
+  const trialRevenue = trialBookings
+    .filter(b => b.status === 'completed')
+    .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+  const trialRefunded = trialBookings.filter(b => b.trialRefunded).length;
+  const trialRefundRate = trialBookings.length > 0
+    ? Math.round(trialRefunded / trialBookings.length * 100) : 0;
 
   const counts = {
     pending: bookings.filter((b) => b.status === 'pending').length,
@@ -128,25 +160,25 @@ export default function Dashboard() {
   const pendingNotifications = notifications.filter((n) => !n.read);
 
   const quickActions = [
-    { icon: FaSearch, label: 'ابحث عن مدرّس', to: '/tutors', desc: 'تصفح المدرّسين المتاحين', gradient: 'from-primary-500 to-emerald-600', shadow: 'shadow-primary-500/20' },
-    { icon: FaUserPlus, label: user?.role === 'tutor' ? 'تعديل الملف' : 'كن مدرّساً', to: '/become-tutor', desc: user?.role === 'tutor' ? 'حدّث معلوماتك' : 'سجّل كمدرّس', gradient: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/20' },
-    { icon: FaComments, label: 'المراسلات', to: '/chat', desc: 'تواصل مع المدرّسين', gradient: 'from-violet-500 to-purple-600', shadow: 'shadow-violet-500/20' },
-    { icon: FaChartBar, label: 'التقارير', to: '/dashboard', desc: 'إحصائياتك وتقدمك', gradient: 'from-blue-500 to-cyan-600', shadow: 'shadow-blue-500/20' },
+    { icon: FaSearch, label: t('dashboard.findTutor'), to: '/tutors', desc: t('dashboard.browseTutors'), gradient: 'from-primary-500 to-emerald-600', shadow: 'shadow-primary-500/20' },
+    { icon: FaUserPlus, label: user?.role === 'tutor' ? t('dashboard.editProfile') : t('nav.becomeTutor'), to: '/become-tutor', desc: user?.role === 'tutor' ? t('dashboard.updateInfo') : t('dashboard.registerAsTutor'), gradient: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/20' },
+    { icon: FaComments, label: t('nav.chat'), to: '/chat', desc: t('dashboard.chatWithTutors'), gradient: 'from-violet-500 to-purple-600', shadow: 'shadow-violet-500/20' },
+    { icon: FaChartBar, label: t('dashboard.reports'), to: '/dashboard', desc: t('dashboard.statsAndProgress'), gradient: 'from-blue-500 to-cyan-600', shadow: 'shadow-blue-500/20' },
   ];
 
   return (
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="page-container">
-      <SEO title="لوحة التحكم" />
+      <SEO title={t('nav.dashboard')} />
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
           <Avatar name={user?.name} size="lg" radius="2xl" />
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">مرحباً، {user?.name}</h1>
+            <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">{t('dashboard.welcome', { name: user?.name })}</h1>
             <p className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5 text-sm">
               <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${user?.role === 'tutor' ? 'bg-primary-100 text-primary-600' : 'bg-green-100 text-green-600'}`}>
-                {user?.role === 'tutor' ? 'مدرّس' : 'طالب'}
+                {user?.role === 'tutor' ? t('dashboard.tutor') : t('dashboard.student')}
               </span>
               {user?.email}
             </p>
@@ -174,7 +206,7 @@ export default function Dashboard() {
               )}
             </button>
             {showAllNotifications && (
-              <div className="absolute left-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden">
+              <div className="absolute left-0 top-full mt-2 w-72 sm:w-80 max-w-[90vw] bg-white rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden">
                 <div className="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                   <h3 className="font-bold text-sm text-slate-900 dark:text-white">الإشعارات</h3>
                   <button onClick={() => setShowAllNotifications(false)} className="text-slate-400 hover:text-slate-600 text-sm">✕</button>
@@ -248,15 +280,20 @@ export default function Dashboard() {
             <div className="space-y-3">
               {conversations.slice(0, 4).map((c) => (
                 <div key={c._id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
-                  <Avatar name={c.tutor?.user?.name} size="sm" radius="full" />
+                  <Avatar name={c.otherUser?.name} size="sm" radius="full" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-700 dark:text-slate-300 truncate">{c.tutor?.user?.name}</p>
-                    <p className="text-xs text-slate-400 truncate">{c.lastMessage}</p>
+                    <p className="text-sm font-medium text-slate-700 dark:text-slate-300 truncate">{c.otherUser?.name}</p>
+                    <p className="text-xs text-slate-400 truncate">{c.text}</p>
                   </div>
                 </div>
               ))}
               {conversations.length === 0 && (
-                <p className="text-sm text-slate-400 text-center py-4">لا توجد محادثات بعد</p>
+                <EmptyState
+                  illustration="message"
+                  title="لا توجد محادثات بعد"
+                  description="تواصل مع المدرّسين لبدء محادثة"
+                  className="!py-8"
+                />
               )}
             </div>
           </div>
@@ -289,7 +326,7 @@ export default function Dashboard() {
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
                   {[
                     { label: 'السعر', value: `${tutorProfile.ratePerHour} درهم/ساعة`, color: 'text-blue-600', bg: 'bg-blue-50' },
-                    { label: 'الإمارة', value: tutorProfile.emirate, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+                    { label: 'الموقع', value: tutorProfile.area ? `${tutorProfile.emirate} - ${tutorProfile.area}` : tutorProfile.emirate, color: 'text-emerald-600', bg: 'bg-emerald-50' },
                     { label: 'التقييم', value: `${tutorProfile.rating?.toFixed(1)} ★`, color: 'text-yellow-600', bg: 'bg-yellow-50' },
                     { label: 'المواد', value: tutorProfile.subjects?.length || 0, color: 'text-violet-600', bg: 'bg-violet-50' },
                     { label: 'الإجمالي', value: `${totalRevenue} درهم`, color: 'text-rose-600', bg: 'bg-rose-50' },
@@ -309,11 +346,13 @@ export default function Dashboard() {
                 </div>
               </>
             ) : (
-              <div className="text-center py-8">
-                <FaChalkboardTeacher className="text-4xl text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-                <p className="text-slate-400 mb-4">لا يوجد ملف تعريف بعد.</p>
-                <Link to="/become-tutor" className="btn-primary !py-2.5 !px-6">أنشئ ملفك الآن</Link>
-              </div>
+              <EmptyState
+                illustration="profile"
+                title="لا يوجد ملف تعريف بعد"
+                description="سجّل كمدرّس وابدأ باستقبال الحجوزات من الطلاب"
+                actionLabel="أنشئ ملفك الآن"
+                actionTo="/become-tutor"
+              />
             )}
           </div>
 
@@ -362,6 +401,53 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+
+          {/* Trial Stats */}
+          {trialBookings.length > 0 && (
+            <div className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl shadow-card p-6 mb-8">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
+                  <FaStar className="text-amber-500" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 dark:text-white">إحصائيات الحصص التجريبية</h3>
+                  <p className="text-xs text-slate-400">مستوحى من Preply — تتبع أداء الحصص التجريبية</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-amber-50/50 dark:bg-amber-500/5 rounded-xl p-4 border border-amber-100 dark:border-amber-800/50">
+                  <p className="text-xs text-amber-600/70 dark:text-amber-400/70 mb-1 flex items-center gap-1">
+                    <FaStar className="text-[10px]" /> حصص تجريبية
+                  </p>
+                  <p className="text-2xl font-extrabold text-amber-700 dark:text-amber-300">{trialBookings.length}</p>
+                  <p className="text-[11px] text-amber-500/60 mt-0.5">إجمالي الحصص التجريبية</p>
+                </div>
+                <div className="bg-emerald-50/50 dark:bg-emerald-500/5 rounded-xl p-4 border border-emerald-100 dark:border-emerald-800/50">
+                  <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70 mb-1 flex items-center gap-1">
+                    <FaArrowUp className="text-[10px]" /> معدل التحويل
+                  </p>
+                  <p className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300">{trialConversionRate}%</p>
+                  <p className="text-[11px] text-emerald-500/60 mt-0.5">{returningTrialStudents.length} من {trialUniqueStudents.length} طالب حجز مرة أخرى</p>
+                </div>
+                <div className="bg-blue-50/50 dark:bg-blue-500/5 rounded-xl p-4 border border-blue-100 dark:border-blue-800/50">
+                  <p className="text-xs text-blue-600/70 dark:text-blue-400/70 mb-1 flex items-center gap-1">
+                    <FaMoneyBillWave className="text-[10px]" /> إيرادات التجريبية
+                  </p>
+                  <p className="text-2xl font-extrabold text-blue-700 dark:text-blue-300">{trialRevenue}</p>
+                  <p className="text-[11px] text-blue-500/60 mt-0.5">درهم من الحصص المكتملة</p>
+                </div>
+                <div className="bg-rose-50/50 dark:bg-rose-500/5 rounded-xl p-4 border border-rose-100 dark:border-rose-800/50">
+                  <p className="text-xs text-rose-600/70 dark:text-rose-400/70 mb-1 flex items-center gap-1">
+                    <FaShieldAlt className="text-[10px]" /> طلبات الاسترداد
+                  </p>
+                  <p className="text-2xl font-extrabold text-rose-700 dark:text-rose-300">{trialRefunded}</p>
+                  <p className={`text-[11px] ${trialRefundRate > 30 ? 'text-rose-500/80' : 'text-rose-500/60'} mt-0.5`}>
+                    {trialRefundRate}% معدل الاسترداد
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
 
@@ -392,7 +478,7 @@ export default function Dashboard() {
               value={newPostMedia}
               onChange={(e) => setNewPostMedia(e.target.value)}
               placeholder="رابط صورة..."
-              className="text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 bg-transparent w-48 text-slate-500"
+              className="text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 bg-transparent w-full sm:w-48 text-slate-500"
             />
             <button onClick={handleDashboardPost} disabled={!newPost.trim() || posting} className="btn-primary !py-1.5 !px-4 text-sm flex items-center gap-1.5">
               {posting ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <FaPaperPlane />}
@@ -442,11 +528,11 @@ export default function Dashboard() {
         )}
 
         {records.length === 0 ? (
-          <div className="text-center py-8 text-slate-400">
-            <FaBookOpen className="text-4xl mx-auto mb-3 text-slate-300 dark:text-slate-600" />
-            <p className="font-bold text-slate-500 dark:text-slate-400 mb-1">لا توجد سجلات أكاديمية بعد</p>
-            <p className="text-sm">أضف موادك الدراسية ودرجاتك لتتبع تقدمك</p>
-          </div>
+          <EmptyState
+            illustration="records"
+            title="لا توجد سجلات أكاديمية بعد"
+            description="أضف موادك الدراسية ودرجاتك لتتبع تقدمك الأكاديمي"
+          />
         ) : (
           <>
             <div className="overflow-x-auto -mx-2">
@@ -536,12 +622,13 @@ export default function Dashboard() {
             ))}
           </div>
         ) : bookings.length === 0 ? (
-          <div className="text-center py-12 text-slate-400">
-            <FaClock className="text-5xl mx-auto mb-4 text-slate-300 dark:text-slate-600" />
-            <p className="font-bold text-slate-500 dark:text-slate-400 mb-1">لا توجد حجوزات بعد</p>
-            <p className="text-sm mb-6">ابدأ بالبحث عن مدرّس واحجز جلستك الأولى.</p>
-            <Link to="/tutors" className="btn-primary">ابحث عن مدرّس</Link>
-          </div>
+          <EmptyState
+            illustration="booking"
+            title="لا توجد حجوزات بعد"
+            description="ابدأ بالبحث عن مدرّس يناسب احتياجاتك واحجز جلستك الأولى"
+            actionLabel="ابحث عن مدرّس"
+            actionTo="/tutors"
+          />
         ) : (
           <div className="space-y-3">
             {bookings.map((b) => {
@@ -561,7 +648,7 @@ export default function Dashboard() {
                           <p className="text-sm text-slate-500 dark:text-slate-400">
                             {user?.role === 'tutor' ? `الطالب: ${b.student?.name}` : `المدرّس: ${b.tutor?.user?.name}`}
                             <span className="mx-1.5">•</span>
-                            {b.tutor?.emirate}
+                            {b.tutor?.area ? `${b.tutor.emirate} - ${b.tutor.area}` : b.tutor?.emirate}
                           </p>
                           <div className="flex items-center gap-3 mt-1.5">
                             <span className="text-xs text-slate-400 flex items-center gap-1">📅 {new Date(b.date).toLocaleDateString('ar-AE')}</span>
@@ -579,6 +666,17 @@ export default function Dashboard() {
                             <button onClick={() => updateStatus(b._id, 'confirmed')} className="px-3 py-1.5 bg-emerald-500 text-white rounded-xl text-xs font-bold hover:bg-emerald-600 transition shadow-sm">قبول</button>
                             <button onClick={() => updateStatus(b._id, 'cancelled')} className="px-3 py-1.5 bg-red-500 text-white rounded-xl text-xs font-bold hover:bg-red-600 transition shadow-sm">رفض</button>
                           </div>
+                        )}
+                        {user?.role !== 'tutor' && b.isTrial && !b.trialRefunded && b.status !== 'cancelled' && (
+                          <button onClick={() => handleTrialRefund(b._id)}
+                            className="px-3 py-1.5 bg-amber-500 text-white rounded-xl text-xs font-bold hover:bg-amber-600 transition shadow-sm flex items-center gap-1">
+                            <FaShieldAlt className="text-[10px]" /> {t('trial.requestRefund')}
+                          </button>
+                        )}
+                        {b.isTrial && b.trialRefunded && (
+                          <span className="px-3 py-1.5 rounded-xl text-xs font-bold border border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10">
+                            {t('trial.satisfactionGuaranteed')}
+                          </span>
                         )}
                       </div>
                     </div>

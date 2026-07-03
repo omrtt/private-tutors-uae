@@ -1,0 +1,758 @@
+[
+  {
+    "_id": "seed000341",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 0,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000341b",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 0,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000341c",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 0,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000342",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 1,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000342b",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 1,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000342c",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 1,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000343",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 2,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000343b",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 2,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000343c",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 2,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000344",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 3,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000344b",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 3,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000344c",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 3,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000345",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 4,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000345b",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 4,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000345c",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 4,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000347",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 6,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000347b",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 6,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000347c",
+    "tutor": "21a519bdba691d9b74e9e579",
+    "dayOfWeek": 6,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000313",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 0,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000313b",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 0,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000313c",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 0,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000314",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 1,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000314b",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 1,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000314c",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 1,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000315",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 2,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000315b",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 2,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000315c",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 2,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000316",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 3,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000316b",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 3,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000316c",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 3,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000317",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 4,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000317b",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 4,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000317c",
+    "tutor": "52f75cd7fe42f18d27ee9f71",
+    "dayOfWeek": 4,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000375",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 0,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000375b",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 0,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000375c",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 0,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000376",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 1,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000376b",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 1,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000376c",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 1,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000377",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 2,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000377b",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 2,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000377c",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 2,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000378",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 3,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000378b",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 3,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000378c",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 3,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000379",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 4,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000379b",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 4,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000379c",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 4,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000381",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 6,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000381b",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 6,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000381c",
+    "tutor": "8580e4823a594aa2656a9225",
+    "dayOfWeek": 6,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000351",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 0,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000351b",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 0,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000351c",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 0,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000352",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 1,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000352b",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 1,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000352c",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 1,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000353",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 2,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000353b",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 2,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000353c",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 2,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000354",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 3,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000354b",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 3,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000354c",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 3,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000355",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 4,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000355b",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 4,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000355c",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 4,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000357",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 6,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000357b",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 6,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000357c",
+    "tutor": "fcab0d5f220e6d65e981e0d1",
+    "dayOfWeek": 6,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000302",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 0,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000302b",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 0,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000302c",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 0,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000303",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 1,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000303b",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 1,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000303c",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 1,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.386Z"
+  },
+  {
+    "_id": "seed000304",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 2,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.387Z"
+  },
+  {
+    "_id": "seed000304b",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 2,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.387Z"
+  },
+  {
+    "_id": "seed000304c",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 2,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.387Z"
+  },
+  {
+    "_id": "seed000305",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 3,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.387Z"
+  },
+  {
+    "_id": "seed000305b",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 3,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.387Z"
+  },
+  {
+    "_id": "seed000305c",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 3,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.387Z"
+  },
+  {
+    "_id": "seed000306",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 4,
+    "startTime": "09:00",
+    "endTime": "12:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.387Z"
+  },
+  {
+    "_id": "seed000306b",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 4,
+    "startTime": "14:00",
+    "endTime": "17:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.387Z"
+  },
+  {
+    "_id": "seed000306c",
+    "tutor": "193e5431dc3c1abf52bf9a2a",
+    "dayOfWeek": 4,
+    "startTime": "19:00",
+    "endTime": "21:00",
+    "isActive": true,
+    "createdAt": "2026-06-24T04:43:50.387Z"
+  }
+]

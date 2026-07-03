@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { FaComment, FaTimes, FaPaperPlane } from 'react-icons/fa';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function ChatBox({ tutorId, tutorName }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -14,8 +16,8 @@ export default function ChatBox({ tutorId, tutorName }) {
   useEffect(() => {
     if (!open || !tutorId) return;
     setLoading(true);
-    axios.get(`/api/chat?tutorId=${tutorId}`)
-      .then(({ data }) => setMessages(data.messages || []))
+    axios.get(`/api/chat/${tutorId}`)
+      .then(({ data }) => setMessages(data.messages || data || []))
       .catch(() => setMessages([]))
       .finally(() => setLoading(false));
   }, [open, tutorId]);
@@ -26,11 +28,11 @@ export default function ChatBox({ tutorId, tutorName }) {
 
   const sendMessage = async () => {
     if (!text.trim()) return;
-    const msg = { sender: user?.name || 'أنت', text: text.trim(), time: new Date().toLocaleTimeString('ar-AE', { hour: '2-digit', minute: '2-digit' }) };
+    const msg = { sender: user?._id, text: text.trim(), time: new Date().toLocaleTimeString('ar-AE', { hour: '2-digit', minute: '2-digit' }), _temp: true };
     setMessages(prev => [...prev, msg]);
     setText('');
     try {
-      await axios.post('/api/chat', { tutorId, text: msg.text });
+      await axios.post('/api/chat', { receiver: tutorId, text: msg.text });
     } catch {
       // silently fail
     }
@@ -45,7 +47,7 @@ export default function ChatBox({ tutorId, tutorName }) {
       <button
         onClick={() => setOpen(true)}
         className="fixed bottom-6 right-6 z-40 w-14 h-14 bg-primary-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-primary-500/30 hover:bg-primary-600 hover:scale-105 active:scale-95 transition-all"
-        title="مراسلة"
+        title={t('chatBox.chatButtonTitle')}
       >
         <FaComment className="text-xl" />
       </button>
@@ -64,7 +66,7 @@ export default function ChatBox({ tutorId, tutorName }) {
       >
         <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-white">
           <div>
-            <h3 className="font-bold text-slate-800">مراسلة</h3>
+            <h3 className="font-bold text-slate-800">{t('chatBox.heading')}</h3>
             <p className="text-xs text-slate-500">{tutorName}</p>
           </div>
           <button onClick={() => setOpen(false)} className="p-2 rounded-lg hover:bg-slate-100 transition text-slate-500">
@@ -73,15 +75,15 @@ export default function ChatBox({ tutorId, tutorName }) {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {loading && <p className="text-center text-slate-400 text-sm">جارٍ التحميل...</p>}
+          {loading && <p className="text-center text-slate-400 text-sm">{t('chatBox.loading')}</p>}
           {!loading && messages.length === 0 && (
-            <p className="text-center text-slate-400 text-sm">لا توجد رسائل بعد. ابدأ المحادثة!</p>
+            <p className="text-center text-slate-400 text-sm">{t('chatBox.noMessages')}</p>
           )}
           {messages.map((msg, i) => {
-            const isMine = msg.sender === user?.name || msg.sender === 'أنت';
+            const isMine = msg.sender === user?._id || msg.sender === user?.name || msg._temp;
             return (
               <div key={i} className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
-                <span className="text-xs text-slate-400 mb-0.5">{msg.sender}</span>
+                <span className="text-xs text-slate-400 mb-0.5">{isMine ? 'أنت' : (tutorName || msg.sender)}</span>
                 <div
                   className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm leading-relaxed ${
                     isMine
@@ -103,7 +105,7 @@ export default function ChatBox({ tutorId, tutorName }) {
             value={text}
             onChange={e => setText(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="اكتب رسالة..."
+            placeholder={t('chatBox.typeMessage')}
             className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-50 transition"
           />
           <button

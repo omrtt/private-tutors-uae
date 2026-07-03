@@ -1,170 +1,119 @@
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
+const mongoose = require('mongoose');
+const models = require('./schemas');
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-
-const generateId = () => crypto.randomBytes(12).toString('hex');
-
-const readFile = (file) => {
-  const fp = path.join(DATA_DIR, `${file}.json`);
-  if (!fs.existsSync(fp)) return [];
-  return JSON.parse(fs.readFileSync(fp, 'utf8'));
-};
-
-const writeFile = (file, data) => {
-  fs.writeFileSync(path.join(DATA_DIR, `${file}.json`), JSON.stringify(data, null, 2), 'utf8');
-};
-
+/**
+ * Collection class that mirrors the original JSON-file-based API
+ * but uses Mongoose models under the hood.
+ * All existing model files continue to work without changes.
+ */
 class Collection {
   constructor(name) {
     this.name = name;
-    this.file = name;
+    this.Model = models[name];
+    if (!this.Model) {
+      throw new Error(`Unknown collection: "${name}". Available: ${Object.keys(models).join(', ')}`);
+    }
   }
 
-  all() {
-    return readFile(this.file);
+  async all() {
+    const docs = await this.Model.find({}).lean();
+    return docs;
   }
 
-  save(data) {
-    writeFile(this.file, data);
+  save() {
+    throw new Error('save() is not supported with MongoDB. Use insertOne or findByIdAndUpdate instead.');
   }
 
   async insertOne(doc) {
-    const docs = this.all();
-    const newDoc = { _id: generateId(), ...doc, createdAt: new Date().toISOString() };
-    docs.push(newDoc);
-    this.save(docs);
-    return newDoc;
+    const created = await this.Model.create({
+      ...doc,
+      createdAt: doc.createdAt || new Date().toISOString(),
+    });
+    return created.toObject();
   }
 
   async find(query = {}) {
-    let docs = this.all();
-    docs = this._applyQuery(docs, query);
+    const docs = await this.Model.find(query).lean();
     return docs;
   }
 
   async findOne(query = {}) {
-    const docs = this.all();
-    const filtered = this._applyQuery(docs, query);
-    return filtered[0] || null;
+    const doc = await this.Model.findOne(query).lean();
+    return doc || null;
   }
 
   async findById(id) {
-    const docs = this.all();
-    return docs.find((d) => d._id === id) || null;
+    if (!id) return null;
+    const doc = await this.Model.findById(id).lean();
+    return doc || null;
   }
 
   async findByIdAndUpdate(id, update, opts = {}) {
-    const docs = this.all();
-    const idx = docs.findIndex((d) => d._id === id);
-    if (idx === -1) return null;
-    if (typeof update === 'object' && !Array.isArray(update)) {
-      docs[idx] = { ...docs[idx], ...update };
-    }
-    this.save(docs);
-    return docs[idx];
+    if (!id) return null;
+    const doc = await this.Model.findByIdAndUpdate(
+      id,
+      { $set: update },
+      { new: true, ...opts }
+    ).lean();
+    return doc || null;
   }
 
   async findOneAndUpdate(query, update) {
-    const docs = this.all();
-    const filtered = this._applyQuery(docs, query);
-    if (filtered.length === 0) return null;
-    const idx = docs.findIndex((d) => d._id === filtered[0]._id);
-    if (typeof update === 'object' && !Array.isArray(update)) {
-      docs[idx] = { ...docs[idx], ...update };
-    }
-    this.save(docs);
-    return docs[idx];
+    const doc = await this.Model.findOneAndUpdate(
+      query,
+      { $set: update },
+      { new: true }
+    ).lean();
+    return doc || null;
   }
 
   async findByIdAndDelete(id) {
-    const docs = this.all();
-    const idx = docs.findIndex((d) => d._id === id);
-    if (idx === -1) return null;
-    const removed = docs.splice(idx, 1)[0];
-    this.save(docs);
-    return removed;
+    if (!id) return null;
+    const doc = await this.Model.findByIdAndDelete(id).lean();
+    return doc || null;
   }
 
   async countDocuments(query = {}) {
-    const docs = this.all();
-    return this._applyQuery(docs, query).length;
+    return this.Model.countDocuments(query);
   }
 
   async deleteMany(query = {}) {
-    const docs = this.all();
-    const remaining = docs.filter((d) => !this._matches(d, query));
-    this.save(remaining);
-    return { deletedCount: docs.length - remaining.length };
+    const result = await this.Model.deleteMany(query);
+    return { deletedCount: result.deletedCount };
   }
 
-  _applyQuery(docs, query) {
-    let filtered = docs.filter((d) => this._matches(d, query));
-    return filtered;
+  async deleteOne(id) {
+    if (!id) return null;
+    const doc = await this.Model.findByIdAndDelete(id).lean();
+    return doc;
   }
 
-  _matches(doc, query) {
-    for (const key of Object.keys(query)) {
-      const val = query[key];
-      if (key === '$or') {
-        const orMatch = val.some((cond) => this._matches(doc, cond));
-        if (!orMatch) return false;
-        continue;
-      }
-      if (key === '$and') {
-        const andMatch = val.every((cond) => this._matches(doc, cond));
-        if (!andMatch) return false;
-        continue;
-      }
-      if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
-        if (val.$regex) {
-          const regex = new RegExp(val.$regex, val.$options || '');
-          const fieldVal = this._getNested(doc, key);
-          const vals = Array.isArray(fieldVal) ? fieldVal : [fieldVal];
-          if (!vals.some((v) => typeof v === 'string' && regex.test(v))) return false;
-        }
-        if (val.$gte !== undefined) {
-          const fieldVal = this._getNested(doc, key);
-          if (fieldVal === undefined || Number(fieldVal) < Number(val.$gte)) return false;
-        }
-        if (val.$lte !== undefined) {
-          const fieldVal = this._getNested(doc, key);
-          if (fieldVal === undefined || Number(fieldVal) > Number(val.$lte)) return false;
-        }
-        if (val.$ne !== undefined) {
-          if (this._getNested(doc, key) === val.$ne) return false;
-        }
-        if (val.$in !== undefined) {
-          const fieldVal = this._getNested(doc, key);
-          if (!val.$in.includes(fieldVal)) return false;
-        }
-      } else if (Array.isArray(doc[key])) {
-        if (!doc[key].some((item) => String(item).toLowerCase().includes(String(val).toLowerCase()))) return false;
-      } else {
-        const docVal = this._getNested(doc, key);
-        if (docVal !== val) return false;
-      }
-    }
-    return true;
+  async update(id, data) {
+    return this.findByIdAndUpdate(id, data);
   }
 
-  _getNested(obj, pathStr) {
-    return pathStr.split('.').reduce((o, p) => (o && o[p] !== undefined ? o[p] : undefined), obj);
-  }
-
-  static ref(model, docs, populatePath, excludeFields = []) {
+  /**
+   * Populate fields by looking up documents in another MongoDB collection.
+   * Uses the Collection class internally to query the referenced model.
+   * Must be awaited by callers.
+   */
+  static async ref(model, docs, populatePath, excludeFields = []) {
     if (!docs || !populatePath) return docs;
     const isArray = Array.isArray(docs);
     const items = isArray ? docs : [docs];
+
+    // Get all docs from the referenced collection
     const col = new Collection(model);
-    const allRefs = col.all();
+    const allRefs = await col.find({});
+    const refMap = {};
+    for (const ref of allRefs) {
+      refMap[ref._id] = ref;
+    }
 
     const result = items.map((item) => {
       if (!item) return item;
       const refId = item[populatePath];
-      let refDoc = allRefs.find((r) => r._id === refId);
+      let refDoc = refMap[refId];
       if (refDoc && excludeFields.length > 0) {
         refDoc = { ...refDoc };
         for (const field of excludeFields) delete refDoc[field];
@@ -176,4 +125,4 @@ class Collection {
   }
 }
 
-module.exports = { Collection, generateId };
+module.exports = { Collection };

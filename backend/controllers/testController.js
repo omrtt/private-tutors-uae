@@ -5,9 +5,18 @@ const { Collection } = require('../db/jsonDb');
 exports.getAllTests = async (req, res) => {
   try {
     const tests = await Test.find({});
-    res.json(tests);
+    const allTutors = await Tutor.find({ isAvailable: true });
+    const testsWithCounts = tests.map((test) => ({
+      ...test,
+      tutorCount: allTutors.filter((t) =>
+        t.specializedTests?.some((st) =>
+          st.toLowerCase().includes(test.name.toLowerCase())
+        )
+      ).length,
+    }));
+    res.json(testsWithCounts);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -17,7 +26,7 @@ exports.getTestById = async (req, res) => {
     if (!test) return res.status(404).json({ message: 'Test not found' });
     res.json(test);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -31,9 +40,9 @@ exports.getTestTutors = async (req, res) => {
       specializedTests: { $regex: test.name, $options: 'i' },
     });
 
-    const populated = Collection.ref('users', tutors, 'user', ['password']);
+    const populated = await Collection.ref('users', tutors, 'user', ['password']);
     res.json(populated);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };

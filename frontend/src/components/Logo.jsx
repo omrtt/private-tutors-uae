@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function Logo({ showText = true, className = '' }) {
+  const { t } = useTranslation();
   return (
     <Link to="/" className={`flex items-center gap-2.5 group ${className}`}>
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
@@ -10,7 +12,7 @@ export default function Logo({ showText = true, className = '' }) {
       </svg>
       {showText && (
         <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-          خصوصي
+          {t('logo.text')}
         </span>
       )}
     </Link>

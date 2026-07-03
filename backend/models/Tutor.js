@@ -7,6 +7,7 @@ const Tutor = {
   async findById(id) { return col.findById(id); },
   async findOneAndUpdate(query, data) { return col.findOneAndUpdate(query, data); },
   async findByIdAndUpdate(id, data) { return col.findByIdAndUpdate(id, data); },
+  async findByIdAndDelete(id) { return col.findByIdAndDelete(id); },
   async create(data) { return col.insertOne(data); },
   async find(query) { return col.find(query); },
   async countDocuments(query) { return col.countDocuments(query); },

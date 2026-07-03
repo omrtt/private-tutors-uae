@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaCreditCard, FaUniversity, FaLock, FaSpinner, FaCheckCircle, FaCopy, FaCheck } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
@@ -11,6 +12,7 @@ const bankAccount = {
 };
 
 export default function PaymentForm({ amount, platformFee, feePercent = 15, onSuccess, onBack }) {
+  const { t } = useTranslation();
   const fee = platformFee ?? Math.round(amount * feePercent / 100);
   const total = amount + fee;
   const [method, setMethod] = useState('card');
@@ -34,12 +36,11 @@ export default function PaymentForm({ amount, platformFee, feePercent = 15, onSu
     e.preventDefault();
     setProcessing(true);
 
-    // Simulate processing delay
-    await new Promise((r) => setTimeout(r, method === 'card' ? 2000 : 1000));
+    await new Promise((r) => setTimeout(r, 300));
 
     setProcessing(false);
     setStep('success');
-    setTimeout(() => onSuccess(method), 1500);
+    setTimeout(() => onSuccess(method), 500);
   };
 
   if (step === 'success') {

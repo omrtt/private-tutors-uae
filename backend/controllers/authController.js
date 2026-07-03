@@ -24,7 +24,7 @@ exports.forgotPassword = async (req, res) => {
 
     res.json({ message: 'Email sent' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -44,7 +44,7 @@ exports.resetPassword = async (req, res) => {
 
     res.json({ message: 'Password reset successful' });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -54,34 +54,41 @@ exports.register = async (req, res) => {
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: 'Email already registered' });
 
-    const user = await User.create({ name, email, password, phone, role: role || 'student' });
+    const fullPhone = phone ? `+971${phone.replace(/^0+/, '')}` : '';
+    const isAdmin = role === 'admin';
+    const user = await User.create({ name, email, password, phone: fullPhone, role: role || 'student', isActive: isAdmin });
     const token = generateToken(user._id);
     res.status(201).json({ user: User.toJSON(user), token });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { phone, password } = req.body;
+    const fullPhone = `+971${phone.replace(/^0+/, '')}`;
+    const user = await User.findOne({ phone: fullPhone });
     if (!user || !(await User.matchPassword(user, password))) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'Invalid phone or password' });
+    }
+    if (!user.isActive) {
+      return res.status(403).json({ message: 'حسابك بانتظار التفعيل من الإدارة' });
     }
     const token = generateToken(user._id);
     res.json({ user: User.toJSON(user), token });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 exports.getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
     res.json(User.toJSON(user));
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -91,6 +98,6 @@ exports.updateProfile = async (req, res) => {
     const user = await User.findByIdAndUpdate(req.user._id, { name, phone });
     res.json(User.toJSON(user));
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };

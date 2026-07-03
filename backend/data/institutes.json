@@ -1,0 +1,188 @@
+[
+  {
+    "_id": "inst001",
+    "name": "معهد الإمارات للغات",
+    "nameEn": "Emirates Language Institute",
+    "description": "معهد متخصص في تدريس اللغات وتأهيل الطلاب لاختبارات IELTS و TOEFL في دبي وأبوظبي",
+    "descriptionEn": "Institute specialized in language teaching and preparing students for IELTS and TOEFL exams in Dubai and Abu Dhabi",
+    "emirates": [
+      "دبي",
+      "أبوظبي"
+    ],
+    "tests": [
+      "IELTS",
+      "TOEFL"
+    ],
+    "subjects": [
+      "اللغة الإنجليزية"
+    ],
+    "phone": "0501112233",
+    "email": "info@emirates-language.ae",
+    "website": "https://emirates-language.ae",
+    "address": "شارع الشيخ زايد، دبي",
+    "logo": "🌐",
+    "rating": 4.5,
+    "studentCount": 1200,
+    "isActive": true,
+    "createdAt": "2026-01-15T04:00:00.000Z",
+    "approved": true
+  },
+  {
+    "_id": "inst002",
+    "name": "أكاديمية النجاح للاختبارات",
+    "nameEn": "Success Test Academy",
+    "description": "أكاديمية متخصصة في التحضير لاختبارات SAT و ACT و IGCSE في الشارقة وعجمان",
+    "descriptionEn": "Academy specialized in SAT, ACT, and IGCSE exam preparation in Sharjah and Ajman",
+    "emirates": [
+      "الشارقة",
+      "عجمان"
+    ],
+    "tests": [
+      "SAT",
+      "ACT",
+      "IGCSE"
+    ],
+    "subjects": [
+      "الرياضيات",
+      "الفيزياء",
+      "اللغة الإنجليزية"
+    ],
+    "phone": "0502223344",
+    "email": "info@success-academy.ae",
+    "website": "https://success-academy.ae",
+    "address": "منطقة النهدة، الشارقة",
+    "logo": "🎓",
+    "rating": 4.7,
+    "studentCount": 850,
+    "isActive": true,
+    "createdAt": "2026-02-20T04:00:00.000Z",
+    "approved": true
+  },
+  {
+    "_id": "inst003",
+    "name": "مركز رؤية للتدريب",
+    "nameEn": "Ruya Training Center",
+    "description": "مركز تدريب يقدم دورات تحضيرية لاختبارات EMSAT و IELTS مع مدرّسين معتمدين في أبوظبي والعين",
+    "descriptionEn": "Training center offering preparatory courses for EMSAT and IELTS with certified tutors in Abu Dhabi and Al Ain",
+    "emirates": [
+      "أبوظبي",
+      "العين"
+    ],
+    "tests": [
+      "EMSAT",
+      "IELTS"
+    ],
+    "subjects": [
+      "الرياضيات",
+      "الفيزياء",
+      "اللغة العربية",
+      "اللغة الإنجليزية"
+    ],
+    "phone": "0503334455",
+    "email": "info@ruya-center.ae",
+    "website": "https://ruya-center.ae",
+    "address": "جزيرة الريم، أبوظبي",
+    "logo": "👁️",
+    "rating": 4.3,
+    "studentCount": 620,
+    "isActive": true,
+    "createdAt": "2026-03-10T04:00:00.000Z",
+    "approved": true
+  },
+  {
+    "_id": "inst004",
+    "name": "معهد دبي الدولي للاختبارات",
+    "nameEn": "Dubai International Test Institute",
+    "description": "أكبر معهد في دبي للتحضير للاختبارات القياسية الدولية مع أحدث المناهج والتقنيات التعليمية",
+    "descriptionEn": "Dubai's largest institute for international standardized test preparation with the latest curricula and educational technologies",
+    "emirates": [
+      "دبي"
+    ],
+    "tests": [
+      "SAT",
+      "IELTS",
+      "TOEFL",
+      "IGCSE"
+    ],
+    "subjects": [
+      "الرياضيات",
+      "اللغة الإنجليزية",
+      "العلوم",
+      "الاقتصاد"
+    ],
+    "phone": "0504445566",
+    "email": "info@dubai-test.ae",
+    "website": "https://dubai-test.ae",
+    "address": "البرشاء، دبي",
+    "logo": "🏛️",
+    "rating": 4.8,
+    "studentCount": 2100,
+    "isActive": true,
+    "createdAt": "2026-01-05T04:00:00.000Z",
+    "approved": true
+  },
+  {
+    "_id": "inst005",
+    "name": "مركز الإبداع التعليمي",
+    "nameEn": "Educational Creativity Center",
+    "description": "مركز متخصص في اختبارات القبول للمدارس الخاصة والدولية في رأس الخيمة والفجيرة",
+    "descriptionEn": "Center specialized in private and international school admission tests in Ras Al Khaimah and Fujairah",
+    "emirates": [
+      "رأس الخيمة",
+      "الفجيرة"
+    ],
+    "tests": [
+      "مدارس"
+    ],
+    "subjects": [
+      "الرياضيات",
+      "اللغة العربية",
+      "اللغة الإنجليزية"
+    ],
+    "phone": "0505556677",
+    "email": "info@creativity-center.ae",
+    "website": "https://creativity-center.ae",
+    "address": "شارع الكورنيش، رأس الخيمة",
+    "logo": "💡",
+    "rating": 4.2,
+    "studentCount": 340,
+    "isActive": true,
+    "createdAt": "2026-04-01T04:00:00.000Z",
+    "approved": true
+  },
+  {
+    "_id": "inst006",
+    "name": "أكاديمية التفوق للعلوم",
+    "nameEn": "Excellence Science Academy",
+    "description": "أكاديمية متخصصة في اختبارات ترفيع الطالب واختبارات القبول الجامعي في جميع إمارات الدولة",
+    "descriptionEn": "Academy specialized in student grade advancement tests and university admission tests across all emirates",
+    "emirates": [
+      "دبي",
+      "أبوظبي",
+      "الشارقة",
+      "عجمان"
+    ],
+    "tests": [
+      "ترفيع",
+      "SAT",
+      "ACT"
+    ],
+    "subjects": [
+      "الرياضيات",
+      "الفيزياء",
+      "الكيمياء",
+      "الأحياء",
+      "علوم الحاسوب"
+    ],
+    "phone": "0506667788",
+    "email": "info@excellence-academy.ae",
+    "website": "https://excellence-academy.ae",
+    "address": "مدينة محمد بن راشد، دبي",
+    "logo": "🏅",
+    "rating": 4.6,
+    "studentCount": 1500,
+    "isActive": true,
+    "createdAt": "2026-02-01T04:00:00.000Z",
+    "approved": true
+  }
+]

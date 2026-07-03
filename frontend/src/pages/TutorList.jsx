@@ -1,33 +1,41 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import TutorCard from '../components/TutorCard';
 import { ListSkeleton } from '../components/Skeleton';
-import { FaSearch, FaFilter, FaTimes, FaGraduationCap, FaSortAmountDown, FaChevronDown, FaStar, FaDollarSign, FaMapMarkerAlt, FaBook, FaLaptop } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaTimes, FaGraduationCap, FaSortAmountDown, FaChevronDown, FaStar, FaDollarSign, FaMapMarkerAlt, FaBook, FaLaptop, FaClipboardList, FaCity } from 'react-icons/fa';
 import Breadcrumbs from '../components/Breadcrumbs';
 import SEO from '../components/SEO';
+import EmptyState from '../components/EmptyState';
+import { getAreas } from '../data/locations';
 
-const emirates = ['الكل', 'أبوظبي', 'دبي', 'الشارقة', 'عجمان', 'أم القيوين', 'رأس الخيمة', 'الفجيرة', 'أونلاين'];
-const subjects = ['الكل', 'الرياضيات', 'الفيزياء', 'الكيمياء', 'الأحياء', 'اللغة الإنجليزية', 'اللغة العربية', 'علوم الحاسوب', 'البرمجة', 'الاقتصاد', 'الفرنسية'];
-const sortOptions = [
-  { value: '', label: 'التقييم (الأعلى)' },
-  { value: 'rate_asc', label: 'السعر (من الأقل)' },
-  { value: 'rate_desc', label: 'السعر (من الأعلى)' },
-  { value: 'experience', label: 'الخبرة (الأكثر)' },
-];
+const subjects = ['الرياضيات', 'الفيزياء', 'الكيمياء', 'الأحياء', 'اللغة الإنجليزية', 'اللغة العربية', 'علوم الحاسوب', 'البرمجة'];
+
+const emirates = ['الكل', 'أبوظبي', 'دبي', 'الشارقة', 'عجمان', 'أم القيوين', 'رأس الخيمة', 'الفجيرة', 'العين'];
+
+const testIcons = {
+  ALCPT: '🌐', SAT: '🎓', IELTS: '🌍', TOEFL: '📘', ACT: '📐', IGCSE: '📚',
+  ABITUR: '🏛️', Baccalaureate: '🎯', EMSAT: '🇦🇪',
+  'مدارس': '🏫', 'ترفيع': '📈',
+};
 
 export default function TutorList() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const [tutors, setTutors] = useState([]);
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
+  const [tests, setTests] = useState([]);
 
   const [filters, setFilters] = useState({
     subject: searchParams.get('subject') || '',
+    test: searchParams.get('test') || '',
     emirate: '',
+    area: '',
     minRate: '',
     maxRate: '',
     minRating: '',
@@ -36,6 +44,10 @@ export default function TutorList() {
     search: searchParams.get('search') || '',
     page: 1,
   });
+
+  useEffect(() => {
+    axios.get('/api/tests').then((res) => setTests(res.data)).catch(() => {});
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -51,36 +63,42 @@ export default function TutorList() {
   }, [filters]);
 
   const setFilter = (key, val) => setFilters((prev) => ({ ...prev, [key]: val, page: 1 }));
-  const clearFilters = () => setFilters({ subject: '', emirate: '', minRate: '', maxRate: '', minRating: '', teachingMode: '', sort: '', search: '', page: 1 });
+  const clearFilters = () => setFilters({ subject: '', test: '', emirate: '', minRate: '', maxRate: '', minRating: '', teachingMode: '', sort: '', search: '', page: 1 });
 
-  const hasActiveFilters = filters.subject || filters.emirate || filters.minRate || filters.maxRate || filters.minRating || filters.teachingMode || filters.search;
+  const hasActiveFilters = filters.subject || filters.test || filters.emirate || filters.area || filters.minRate || filters.maxRate || filters.minRating || filters.teachingMode || filters.search;
+  const sortOptions = [
+    { value: '', label: t('sortOptions.ratingHighest') },
+    { value: 'rate_asc', label: t('sortOptions.priceLowest') },
+    { value: 'rate_desc', label: t('sortOptions.priceHighest') },
+    { value: 'experience', label: t('sortOptions.experienceMost') },
+  ];
 
   return (
     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="page-container">
-      <SEO title="البحث عن مدرّسين" />
-      <Breadcrumbs items={[{ label: 'البحث عن مدرّس' }]} />
+      <SEO title={t('tutorList.seoTitle')} />
+      <Breadcrumbs items={[{ label: t('tutorList.breadcrumb') }]} />
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="section-title !text-3xl">ابحث عن مدرّس</h1>
+          <h1 className="section-title !text-3xl">{t('tutorList.heading')}</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
-            {loading ? 'جاري التحميل...' : `${total} مدرّس${total !== 1 ? 'ين' : ''} متاح${total !== 1 ? 'ين' : ''}`}
+            {loading ? t('common.loading') : `${total} ${t('tutorList.tutorSingular')}${total !== 1 ? t('tutorList.tutorPluralSuffix') : ''} ${t('tutorList.available')}${total !== 1 ? t('tutorList.tutorPluralSuffix') : ''}`}
             {hasActiveFilters && (
-              <button onClick={clearFilters} className="mr-2 text-primary-500 hover:underline text-sm">(إلغاء الفلترة)</button>
+              <button onClick={clearFilters} className="mr-2 text-primary-500 hover:underline text-sm">{t('tutorList.clearFiltersLabel')}</button>
             )}
           </p>
         </div>
         <button onClick={() => setShowFilters(!showFilters)} className="btn-outline !py-2.5 !px-4 flex items-center gap-2 md:hidden">
-          <FaFilter /> {showFilters ? 'إخفاء' : 'فلترة'}
+          <FaFilter /> {showFilters ? t('common.hide') : t('common.filter')}
         </button>
       </div>
 
       <div className="flex gap-6">
-        <FilterSidebar filters={filters} setFilter={setFilter} clearFilters={clearFilters} hasActiveFilters={hasActiveFilters} showFilters={showFilters} />
+        <FilterSidebar filters={filters} setFilter={setFilter} clearFilters={clearFilters} hasActiveFilters={hasActiveFilters} showFilters={showFilters} tests={tests} />
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-slate-400">{!loading && `${total} نتيجة`}</p>
+            <p className="text-sm text-slate-400">{!loading && `${total} ${t('tutorList.resultCount')}`}</p>
             <div className="flex items-center gap-2">
               <FaSortAmountDown className="text-slate-400 text-sm" />
               <select className="text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 bg-white dark:bg-slate-800 outline-none focus:border-primary-400 text-slate-600 dark:text-slate-300"
@@ -93,12 +111,13 @@ export default function TutorList() {
           {loading ? (
             <ListSkeleton count={6} />
           ) : tutors.length === 0 ? (
-            <div className="text-center py-20">
-              <FaGraduationCap className="text-6xl text-slate-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-slate-500 dark:text-slate-400 mb-2">لا توجد نتائج</h3>
-              <p className="text-slate-400 dark:text-slate-500 mb-6">لا يوجد مدرّسين مطابقين لمعايير البحث.</p>
-              <button onClick={clearFilters} className="btn-primary">إلغاء الفلترة</button>
-            </div>
+            <EmptyState
+              illustration="results"
+              title={t('tutorList.noResultsTitle')}
+              description={t('tutorList.noResultsDescription')}
+              actionLabel={t('tutorList.noResultsClear')}
+              onAction={clearFilters}
+            />
           ) : (
             <>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -127,8 +146,9 @@ export default function TutorList() {
   );
 }
 
-function FilterSidebar({ filters, setFilter, clearFilters, hasActiveFilters, showFilters }) {
-  const [openSections, setOpenSections] = useState({});
+function FilterSidebar({ filters, setFilter, clearFilters, hasActiveFilters, showFilters, tests }) {
+  const [openSections, setOpenSections] = useState({ emirate: true });
+  const areas = filters.emirate ? getAreas(filters.emirate) : [];
 
   const toggle = (key) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
@@ -157,6 +177,38 @@ function FilterSidebar({ filters, setFilter, clearFilters, hasActiveFilters, sho
         })}
       </div>
     )},
+    { key: 'test', icon: FaClipboardList, label: 'الاختبار القياسي', badge: filters.test || null, content: tests.length === 0 ? (
+      <div className="flex flex-wrap gap-1.5">
+        <button disabled className="px-3 py-1.5 text-xs font-medium rounded-xl border border-slate-200 dark:border-slate-700 text-slate-400">
+          جاري التحميل...
+        </button>
+      </div>
+    ) : (
+      <div className="flex flex-wrap gap-1.5">
+        <button onClick={() => setFilter('test', '')}
+          className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition ${
+            !filters.test
+              ? 'bg-primary-500 text-white border-primary-500 shadow-sm shadow-primary-500/20'
+              : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:text-primary-600 dark:hover:text-primary-400'
+          }`}>
+          الكل
+        </button>
+        {tests.map((t) => {
+          const active = filters.test === t.name;
+          return (
+            <button key={t._id} onClick={() => setFilter('test', t.name)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition flex items-center gap-1 ${
+                active
+                  ? 'bg-primary-500 text-white border-primary-500 shadow-sm shadow-primary-500/20'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:text-primary-600 dark:hover:text-primary-400'
+              }`}>
+              <span className="text-xs">{testIcons[t.name] || '📚'}</span>
+              {t.name}
+            </button>
+          );
+        })}
+      </div>
+    )},
     { key: 'emirate', icon: FaMapMarkerAlt, label: 'الإمارة', badge: filters.emirate || null, content: (
       <div className="flex flex-wrap gap-1.5">
         {emirates.map((e) => {
@@ -172,6 +224,37 @@ function FilterSidebar({ filters, setFilter, clearFilters, hasActiveFilters, sho
             </button>
           );
         })}
+      </div>
+    )},
+    { key: 'area', icon: FaCity, label: 'المنطقة', badge: filters.area || null, content: (
+      <div className="flex flex-wrap gap-1.5">
+        {areas.length === 0 ? (
+          <span className="text-xs text-slate-400 px-1">اختر إمارة أولاً</span>
+        ) : (
+          <>
+            <button onClick={() => setFilter('area', '')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition ${
+                !filters.area
+                  ? 'bg-primary-500 text-white border-primary-500 shadow-sm shadow-primary-500/20'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:text-primary-600 dark:hover:text-primary-400'
+              }`}>
+              الكل
+            </button>
+            {areas.map((a) => {
+              const active = filters.area === a;
+              return (
+                <button key={a} onClick={() => setFilter('area', a)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-xl border transition ${
+                    active
+                      ? 'bg-primary-500 text-white border-primary-500 shadow-sm shadow-primary-500/20'
+                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-600 hover:text-primary-600 dark:hover:text-primary-400'
+                  }`}>
+                  {a}
+                </button>
+              );
+            })}
+          </>
+        )}
       </div>
     )},
     { key: 'price', icon: FaDollarSign, label: 'نطاق السعر', badge: (filters.minRate || filters.maxRate) ? `${filters.minRate || '٠'} - ${filters.maxRate || '∞'} درهم` : null, content: (
@@ -191,12 +274,12 @@ function FilterSidebar({ filters, setFilter, clearFilters, hasActiveFilters, sho
         <option value="2">نجمتين فأكثر</option>
       </select>
     )},
-    { key: 'mode', icon: FaLaptop, label: 'طريقة التدريس', badge: filters.teachingMode ? { online: 'أونلاين', 'in-person': 'حضوري', both: 'أونلاين + حضوري' }[filters.teachingMode] : null, content: (
+    { key: 'mode', icon: FaLaptop, label: 'طريقة التدريس', badge: filters.teachingMode ? { online: 'أونلاين', inPerson: 'حضوري', both: 'أونلاين + حضوري' }[filters.teachingMode] : null, content: (
       <div className="flex flex-wrap gap-1.5">
         {[
           { value: '', label: 'الكل' },
           { value: 'online', label: 'أونلاين' },
-          { value: 'in-person', label: 'حضوري' },
+          { value: 'inPerson', label: 'حضوري' },
           { value: 'both', label: 'أونلاين + حضوري' },
         ].map((opt) => {
           const active = (filters.teachingMode || '') === opt.value;

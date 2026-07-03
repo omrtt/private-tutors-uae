@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import { FaHome, FaChevronLeft } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 export default function Breadcrumbs({ items }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-1.5 text-sm text-slate-400 dark:text-slate-500 mb-6 flex-wrap">
       <Link to="/" className="flex items-center gap-1.5 hover:text-primary-500 transition-colors p-1 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20">
         <FaHome className="text-[11px]" />
-        <span>الرئيسية</span>
+        <span>{t('breadcrumbs.home')}</span>
       </Link>
       {items?.map((item, i) => (
         <span key={i} className="flex items-center gap-1.5">

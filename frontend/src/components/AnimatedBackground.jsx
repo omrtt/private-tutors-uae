@@ -25,10 +25,11 @@ export default function AnimatedBackground({ className = '', variant = 'hero' })
 
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
-      <svg className="w-full h-full opacity-[0.025]" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+      <svg className="w-full h-full opacity-[0.018]" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="g" width="60" height="60" patternUnits="userSpaceOnUse">
-            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#475569" strokeWidth="0.5" />
+          <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M20 2 L38 20 L20 38 L2 20 Z" fill="none" stroke="#475569" strokeWidth="0.4" />
+            <circle cx="20" cy="20" r="1.2" fill="#475569" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#g)" />
@@ -37,6 +38,8 @@ export default function AnimatedBackground({ className = '', variant = 'hero' })
         style={{ animation: 'bgDrift 15s ease-in-out infinite' }} />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-500 rounded-full opacity-[0.03] blur-3xl"
         style={{ animation: 'bgDrift 18s ease-in-out infinite reverse' }} />
+      <div className="absolute top-1/3 right-1/3 w-48 h-48 bg-amber-400 rounded-full opacity-[0.02] blur-3xl"
+        style={{ animation: 'bgDrift 20s ease-in-out infinite' }} />
       <style>{`
         @keyframes bgDrift {
           0%, 100% { transform: translate(0, 0); }

@@ -11,7 +11,7 @@ exports.toggleFavorite = async (req, res) => {
     await Favorite.create({ student: req.user._id, tutor: tutorId });
     res.json({ favorited: true });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -20,7 +20,7 @@ exports.getMyFavorites = async (req, res) => {
     const favs = await Favorite.find({ student: req.user._id });
     res.json(favs.map((f) => f.tutor));
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -29,6 +29,6 @@ exports.checkFavorite = async (req, res) => {
     const fav = await Favorite.findOne({ student: req.user._id, tutor: req.params.tutorId });
     res.json({ favorited: !!fav });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };

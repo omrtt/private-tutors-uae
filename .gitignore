@@ -1,35 +1,5 @@
-# Dependencies
 node_modules/
-
-# Environment variables
 .env
-.env.local
-.env.production
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
+dist/
 *.log
-npm-debug.log*
-
-# Build output
-frontend/dist/
-
-# PID files
-*.pid
-
-# Temp files
-started.txt
-
-# Windows reserved names
-nul
-*.ps1
+.DS_Store

@@ -1,5 +1,7 @@
-{
-  "_id": "default",
-  "platformFeePercent": 15,
-  "updatedAt": "2026-06-29T00:00:00.000Z"
-}
+[
+  {
+    "_id": "default",
+    "platformFeePercent": 15,
+    "updatedAt": "2026-06-29T00:00:00.000Z"
+  }
+]

@@ -27,17 +27,17 @@ exports.createReview = async (req, res) => {
 
     res.status(201).json(review);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 exports.getTutorReviews = async (req, res) => {
   try {
-    let reviews = await Review.find({ tutor: req.params.tutorId });
+    let reviews = await Review.find({ tutor: req.params.tutorId, approved: true });
     reviews.reverse();
-    reviews = Collection.ref('users', reviews, 'student', ['password']);
+    reviews = await Collection.ref('users', reviews, 'student', ['password']);
     res.json(reviews);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };

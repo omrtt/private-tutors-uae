@@ -1,0 +1,198 @@
+[
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "665753f6ad3fee47e8c663f1",
+    "text": "السلام عليكم، أريد حجز حصة لتعليم الرياضيات",
+    "read": true,
+    "createdAt": "2026-07-01T08:00:00.000Z"
+  },
+  {
+    "sender": "665753f6ad3fee47e8c663f1",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "وعليكم السلام! مرحباً بك. متى يناسبك؟",
+    "read": true,
+    "createdAt": "2026-07-01T08:05:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "665753f6ad3fee47e8c663f1",
+    "text": "يناسبني يوم الأربعاء الساعة 4 العصر",
+    "read": true,
+    "createdAt": "2026-07-01T08:10:00.000Z"
+  },
+  {
+    "sender": "665753f6ad3fee47e8c663f1",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "تمام، الأربعاء 4 العصر مؤكّد ✅",
+    "read": true,
+    "createdAt": "2026-07-01T08:12:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "10e86d365d8e92671570dbd5",
+    "text": "مرحباً فاطمة، كم سعر الحصة للغة الإنجليزية؟",
+    "read": true,
+    "createdAt": "2026-07-01T10:00:00.000Z"
+  },
+  {
+    "sender": "10e86d365d8e92671570dbd5",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "مرحباً! سعر الحصة 80 درهم للساعة. أول حصة تجريبية 40 درهم فقط",
+    "read": true,
+    "createdAt": "2026-07-01T10:05:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "10e86d365d8e92671570dbd5",
+    "text": "سعر ممتاز! هل عندك مواعيد متاحة يوم الجمعة؟",
+    "read": false,
+    "createdAt": "2026-07-01T10:10:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "856edda7199a09571c0c45fb",
+    "text": "أستاذة سارة، أنا عندي اختبار IELTS بعد شهر. ممكن تساعديني؟",
+    "read": true,
+    "createdAt": "2026-07-02T09:00:00.000Z"
+  },
+  {
+    "sender": "856edda7199a09571c0c45fb",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "أكيد! عندي برنامج مكثف لتجهيز IELTS. نبدأ بحصتين في الأسبوع؟",
+    "read": true,
+    "createdAt": "2026-07-02T09:15:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "856edda7199a09571c0c45fb",
+    "text": "حصتين في الأسبوع ممتاز. هل عندك خبرة مع اختبار IELTS الأكاديمي؟",
+    "read": true,
+    "createdAt": "2026-07-02T09:20:00.000Z"
+  },
+  {
+    "sender": "856edda7199a09571c0c45fb",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "نعم، درّبت أكثر من 50 طالباً وحققوا درجات 6.5 وما فوق",
+    "read": true,
+    "createdAt": "2026-07-02T09:25:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "856edda7199a09571c0c45fb",
+    "text": "رائع! خلينا نبدأ من الأسبوع الجاي",
+    "read": true,
+    "createdAt": "2026-07-02T09:30:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "cfdb98ab20024c661464ceaf",
+    "text": "أستاذ عمر، ممكن أسألك عن مادة الفيزياء؟",
+    "read": true,
+    "createdAt": "2026-07-03T14:00:00.000Z"
+  },
+  {
+    "sender": "cfdb98ab20024c661464ceaf",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "تفضل. وش عندك من استفسار؟",
+    "read": true,
+    "createdAt": "2026-07-03T14:10:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "cfdb98ab20024c661464ceaf",
+    "text": "أبي أشرح مادة الفيزياء للصف الحادي عشر منهج وزارة",
+    "read": true,
+    "createdAt": "2026-07-03T14:15:00.000Z"
+  },
+  {
+    "sender": "cfdb98ab20024c661464ceaf",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "أنا مدرّس فيزياء خبرة 8 سنين. أقدر أساعدك 👍",
+    "read": false,
+    "createdAt": "2026-07-03T14:20:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "e9a896b48233533ace0e37d6",
+    "text": "مرحباً نورة، هل تدرسين الكيمياء للصف الثاني عشر؟",
+    "read": true,
+    "createdAt": "2026-07-04T11:00:00.000Z"
+  },
+  {
+    "sender": "e9a896b48233533ace0e37d6",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "مرحباً! نعم، أدرّس الكيمياء لجميع المراحل. حالياً عندي ٣ طلاب في الصف الثاني عشر",
+    "read": true,
+    "createdAt": "2026-07-04T11:05:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "e9a896b48233533ace0e37d6",
+    "text": "هل الحصص أونلاين ولا حضوري؟",
+    "read": true,
+    "createdAt": "2026-07-04T11:10:00.000Z"
+  },
+  {
+    "sender": "e9a896b48233533ace0e37d6",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "الحصص أونلاين عبر Zoom مع استخدام السبورة التفاعلية",
+    "read": false,
+    "createdAt": "2026-07-04T11:15:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "e922079fb09a708e8afb73df",
+    "text": "مرحباً، كم تاخذ المنصة نسبة من الحجز؟",
+    "read": true,
+    "createdAt": "2026-07-05T16:00:00.000Z"
+  },
+  {
+    "sender": "e922079fb09a708e8afb73df",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "مرحباً! المنصة تأخذ 10% من قيمة الحجز فقط. الباقي كله للمدرّس",
+    "read": true,
+    "createdAt": "2026-07-05T16:05:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "e922079fb09a708e8afb73df",
+    "text": "نسبة ممتازة! شكراً للتوضيح",
+    "read": true,
+    "createdAt": "2026-07-05T16:10:00.000Z"
+  },
+  {
+    "sender": "e922079fb09a708e8afb73df",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "العفو، إذا عندك أي استفسار ثاني أنا موجود",
+    "read": false,
+    "createdAt": "2026-07-05T16:15:00.000Z"
+  },
+  {
+    "sender": "74353ad087dbffcd9d943eb7",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "مرحباً طالب تجريبي! شفت أنك مهتم بالرياضيات، أقدر أساعدك في الجبر والتفاضل",
+    "read": true,
+    "createdAt": "2026-07-03T07:00:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "74353ad087dbffcd9d943eb7",
+    "text": "مرحباً ليلى! فعلاً محتاج مساعدة في التفاضل. كم سعر الحصة؟",
+    "read": true,
+    "createdAt": "2026-07-03T07:10:00.000Z"
+  },
+  {
+    "sender": "74353ad087dbffcd9d943eb7",
+    "receiver": "8b23c08beffc19dd1b4be49e",
+    "text": "سعر الحصة 70 درهم للساعة. أول حصة تجريبية 35 درهم",
+    "read": true,
+    "createdAt": "2026-07-03T07:15:00.000Z"
+  },
+  {
+    "sender": "8b23c08beffc19dd1b4be49e",
+    "receiver": "74353ad087dbffcd9d943eb7",
+    "text": "خلاص نتفق على أول حصة تجريبية بكره الساعة 5",
+    "read": false,
+    "createdAt": "2026-07-03T07:20:00.000Z"
+  }
+]

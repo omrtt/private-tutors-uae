@@ -1,111 +1,152 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import { motion } from 'framer-motion';
-import { FaPaperPlane, FaSearch, FaEllipsisV, FaCheck, FaCheckDouble, FaArrowRight, FaComment } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaPaperPlane, FaSearch, FaComment, FaInbox, FaUserCircle, FaRegSmile, FaPhone, FaVideo } from 'react-icons/fa';
 import Avatar from '../components/Avatar';
 import SEO from '../components/SEO';
 
+function fmtTime(d) {
+  const n = new Date();
+  const s = d.toDateString() === n.toDateString();
+  const y = new Date(n); y.setDate(y.getDate() - 1);
+  if (s) return d.toLocaleTimeString('ar-AE', { hour: '2-digit', minute: '2-digit' });
+  if (d.toDateString() === y.toDateString()) return 'أمس';
+  return d.toLocaleDateString('ar-AE', { day: 'numeric', month: 'short' });
+}
+
+function dateBar(d) {
+  const n = new Date();
+  if (d.toDateString() === n.toDateString()) return 'اليوم';
+  const y = new Date(n); y.setDate(y.getDate() - 1);
+  if (d.toDateString() === y.toDateString()) return 'أمس';
+  return d.toLocaleDateString('ar-AE', { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+function sepNeeded(msgs, i) {
+  if (i === 0) return true;
+  return new Date(msgs[i].createdAt).toDateString() !== new Date(msgs[i - 1].createdAt).toDateString();
+}
+
 export default function Chat() {
   const { user } = useAuth();
-  const [conversations, setConversations] = useState([]);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [convs, setConvs] = useState([]);
+  const [active, setActive] = useState(null);
+  const [msgs, setMsgs] = useState([]);
   const [text, setText] = useState('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const bottomRef = useRef(null);
-  const pollRef = useRef(null);
+  const [sending, setSending] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [unread, setUnread] = useState(0);
+  const bottom = useRef(null);
+  const poll = useRef(null);
+  const inp = useRef(null);
 
-  useEffect(() => {
-    axios.get('/api/chat/conversations').then((r) => setConversations(r.data)).catch(() => {}).finally(() => setLoading(false));
+  const fetchUnread = useCallback(async () => {
+    try { const { data } = await axios.get('/api/chat/unread/count'); setUnread(data.count); } catch {}
   }, []);
 
   useEffect(() => {
-    if (!activeChat) return;
-    const fetchMessages = () => {
-      axios.get(`/api/chat/${activeChat.userId || activeChat._id}`).then((r) => {
-        setMessages(r.data.messages || r.data || []);
-      }).catch(() => {});
+    axios.get('/api/chat/conversations').then(r => setConvs(r.data)).catch(() => {}).finally(() => setLoading(false));
+    fetchUnread();
+  }, [fetchUnread]);
+
+  useEffect(() => {
+    if (!active) return;
+    const oid = active.otherUser?._id || active._id;
+    const fetch = async () => {
+      try {
+        const { data } = await axios.get(`/api/chat/${oid}`);
+        setMsgs(data.messages || data || []);
+        await axios.put(`/api/chat/${oid}/read`);
+        fetchUnread();
+      } catch {}
     };
-    fetchMessages();
-    pollRef.current = setInterval(fetchMessages, 3000);
-    return () => clearInterval(pollRef.current);
-  }, [activeChat]);
+    fetch();
+    poll.current = setInterval(fetch, 3000);
+    return () => clearInterval(poll.current);
+  }, [active, fetchUnread]);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  useEffect(() => { bottom.current?.scrollIntoView({ behavior: 'smooth' }); }, [msgs]);
+  useEffect(() => { if (active) setTimeout(() => bottom.current?.scrollIntoView({ behavior: 'smooth' }), 100); }, [active]);
 
-  const sendMessage = async () => {
-    if (!text.trim() || !activeChat) return;
-    const msg = { sender: user?.name, text: text.trim(), time: new Date().toLocaleTimeString('ar-AE', { hour: '2-digit', minute: '2-digit' }), _temp: true };
-    setMessages((prev) => [...prev, msg]);
+  const send = async () => {
+    if (!text.trim() || !active || sending) return;
+    const oid = active.otherUser?._id || active._id;
+    setMsgs(p => [...p, { sender: { _id: user?._id }, text: text.trim(), _temp: true, createdAt: new Date().toISOString() }]);
     setText('');
+    setSending(true);
     try {
-      await axios.post('/api/chat', { tutorId: activeChat.userId || activeChat._id, text: msg.text });
-    } catch {}
+      await axios.post('/api/chat', { receiver: oid, text: text.trim() });
+      const { data } = await axios.get(`/api/chat/${oid}`);
+      setMsgs(data.messages || data || []);
+    } catch {} finally { setSending(false); }
   };
 
-  const handleKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } };
-
-  const filteredConvs = conversations.filter((c) =>
-    c.tutor?.user?.name?.toLowerCase().includes(search.toLowerCase()) ||
-    c.lastMessage?.toLowerCase().includes(search.toLowerCase())
+  const filtered = convs.filter(c =>
+    c.otherUser?.name?.toLowerCase().includes(search.toLowerCase()) ||
+    c.text?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const other = active?.otherUser;
+
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="h-[calc(100vh-64px-72px)] lg:h-[calc(100vh-72px-72px)]">
-      <SEO title="المراسلات" />
-      <div className="flex h-full max-w-6xl mx-auto border-x border-slate-100 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-900">
-        <div className={`${sidebarOpen ? 'w-full md:w-80' : 'w-0 md:w-80'} shrink-0 border-l border-slate-100 dark:border-slate-800 flex flex-col transition-all duration-300 overflow-hidden`}>
-          <div className="p-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-            <h2 className="font-bold text-lg text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-              <FaComment className="text-primary-500 text-sm" /> المراسلات
-            </h2>
+    <div className="h-[calc(100vh-64px-72px)] lg:h-[calc(100vh-72px-72px)]">
+      <SEO title="المحادثات" />
+      <div className="flex h-full max-w-6xl mx-auto overflow-hidden bg-white">
+        {/* Sidebar */}
+        <div className={`${showSidebar ? 'w-full md:w-72' : 'w-0 md:w-72'} shrink-0 flex flex-col transition-all duration-300 overflow-hidden border-l border-gray-100`}>
+          <div className="p-3 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="font-bold text-base text-gray-900">المحادثات</h2>
+              {unread > 0 && <span className="text-[11px] bg-blue-500 text-white px-2 py-0.5 rounded-full font-bold">{unread}</span>}
+            </div>
             <div className="relative">
-              <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" />
+              <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
               <input
-                type="text"
-                placeholder="بحث في المحادثات..."
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pr-9 pl-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary-500/20 transition placeholder:text-slate-400"
+                onChange={e => setSearch(e.target.value)}
+                placeholder="ابحث..."
+                className="w-full pr-9 pl-3 py-2 bg-gray-50 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/20 transition placeholder:text-gray-400"
               />
             </div>
           </div>
           <div className="flex-1 overflow-y-auto">
             {loading ? (
-              <div className="p-4 space-y-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="flex items-center gap-3 animate-pulse">
-                    <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700" />
-                    <div className="flex-1 space-y-1.5">
-                      <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-2/3" />
-                      <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded w-1/2" />
-                    </div>
+              <div className="p-3 space-y-1">
+                {[1,2,3,4,5].map(i => (
+                  <div key={i} className="flex items-center gap-3 p-2.5 animate-pulse">
+                    <div className="w-11 h-11 rounded-full bg-gray-200 shrink-0" />
+                    <div className="flex-1 space-y-1.5"><div className="h-3 bg-gray-200 rounded w-2/3" /><div className="h-2.5 bg-gray-100 rounded w-1/2" /></div>
                   </div>
                 ))}
               </div>
-            ) : filteredConvs.length === 0 ? (
-              <div className="text-center py-12 text-slate-400 text-sm">لا توجد محادثات</div>
+            ) : filtered.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-center px-4 py-12">
+                <FaInbox className="text-3xl text-gray-300 mb-3" />
+                <p className="text-gray-500 font-medium text-sm">{search ? 'لا توجد نتائج' : 'لا توجد محادثات'}</p>
+                <p className="text-gray-400 text-xs mt-1">{search ? 'حاول بكلمات أخرى' : 'تواصل مع مدرّس لبدء محادثة'}</p>
+              </div>
             ) : (
-              filteredConvs.map((c) => {
-                const isActive = activeChat?._id === c._id;
+              filtered.map((c, i) => {
+                const act = active?._id === c._id;
+                const o = c.otherUser;
                 return (
                   <button
                     key={c._id}
-                    onClick={() => { setActiveChat(c); setSidebarOpen(false); }}
-                    className={`w-full text-right p-3 flex items-center gap-3 transition hover:bg-slate-50 dark:hover:bg-slate-800/50 border-b border-slate-50 dark:border-slate-800/50 ${
-                      isActive ? 'bg-primary-50 dark:bg-primary-500/10' : ''
-                    }`}
+                    onClick={() => { setActive(c); setShowSidebar(false); inp.current?.focus(); }}
+                    className={`w-full text-right p-3 flex items-center gap-3 transition-all ${
+                      act ? 'bg-blue-50' : 'hover:bg-gray-50'
+                    } border-b border-gray-50 last:border-0`}
                   >
-                    <Avatar name={c.tutor?.user?.name} size="md" radius="full" />
+                    <Avatar name={o?.name} size="md" radius="full" className="shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold text-sm text-slate-800 dark:text-slate-200 truncate">{c.tutor?.user?.name}</span>
-                        {c.lastTime && <span className="text-[10px] text-slate-400 shrink-0">{c.lastTime}</span>}
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`font-semibold text-sm truncate ${act ? 'text-blue-600' : 'text-gray-900'}`}>{o?.name || 'مستخدم'}</span>
+                        <span className="text-[10px] text-gray-400 shrink-0">{c.createdAt ? fmtTime(new Date(c.createdAt)) : ''}</span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">{c.lastMessage || 'بداية محادثة'}</p>
+                      <p className="text-xs text-gray-500 truncate mt-0.5">{c.text || 'بداية المحادثة'}</p>
                     </div>
                   </button>
                 );
@@ -114,91 +155,122 @@ export default function Chat() {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col min-w-0">
-          {activeChat ? (
-            <>
-              <div className="flex items-center gap-3 p-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-                {!sidebarOpen && (
-                  <button onClick={() => setSidebarOpen(true)} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 md:hidden">
-                    <FaArrowRight />
-                  </button>
-                )}
-                <Avatar name={activeChat.tutor?.user?.name} size="sm" radius="full" />
-                <div className="flex-1">
-                  <p className="font-semibold text-sm text-slate-800 dark:text-slate-200">{activeChat.tutor?.user?.name}</p>
-                  <p className="text-[11px] text-slate-400">متصل</p>
-                </div>
-                <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition">
-                  <FaEllipsisV />
-                </button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-slate-50/50 dark:bg-slate-800/30"
-                style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.02) 1px, transparent 0)', backgroundSize: '20px 20px' }}>
-                {messages.length === 0 && (
-                  <div className="text-center py-16">
-                    <FaComment className="text-4xl text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-                    <p className="text-slate-400 text-sm">لا توجد رسائل بعد</p>
-                    <p className="text-slate-400 text-xs mt-1">أرسل أول رسالة لبدء المحادثة</p>
+        {/* Chat */}
+        <div className="flex-1 flex flex-col min-w-0 bg-gray-50">
+          <AnimatePresence mode="wait">
+            {active ? (
+              <motion.div key="c" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 flex flex-col min-h-0">
+                {/* Header */}
+                <div className="flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-100 shadow-sm">
+                  {!showSidebar && (
+                    <button onClick={() => setShowSidebar(true)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition md:hidden">
+                      <FaPaperPlane className="text-sm rotate-180" />
+                    </button>
+                  )}
+                  <Avatar name={other?.name} size="sm" radius="full" className="shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm text-gray-900 truncate">{other?.name || 'مستخدم'}</p>
+                    <p className="text-[11px] text-green-600 flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-500 rounded-full inline-block" />نشط الآن</p>
                   </div>
-                )}
-                {messages.map((msg, i) => {
-                  const isMine = msg.sender === user?.name || msg.sender === 'أنت';
-                  return (
-                    <div key={i} className={`flex ${isMine ? 'justify-start' : 'justify-end'}`}>
-                      <div className={`max-w-[75%] md:max-w-[60%] ${isMine ? 'order-2' : 'order-1'}`}>
-                        <div
-                          className={`px-4 py-2.5 text-sm leading-relaxed shadow-sm ${
-                            isMine
-                              ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-2xl rounded-br-md border border-slate-100 dark:border-slate-600'
-                              : 'bg-primary-500 text-white rounded-2xl rounded-bl-md'
-                          }`}
-                        >
-                          {msg.text}
-                        </div>
-                        <div className={`flex items-center gap-1 mt-0.5 ${isMine ? 'justify-start' : 'justify-end'} px-1`}>
-                          <span className="text-[10px] text-slate-400">{msg.time || ''}</span>
-                          {isMine && (msg._temp ? <FaCheck className="text-[10px] text-slate-400" /> : <FaCheckDouble className="text-[10px] text-primary-500" />)}
-                        </div>
+                  <div className="flex items-center gap-1">
+                    <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 transition"><FaPhone className="text-sm" /></button>
+                    <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-400 transition"><FaVideo className="text-sm" /></button>
+                  </div>
+                </div>
+
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto px-4 py-3">
+                  {msgs.length === 0 ? (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <FaInbox className="text-3xl text-gray-300 mx-auto mb-2" />
+                        <p className="text-gray-500 text-sm font-medium">لا توجد رسائل</p>
+                        <p className="text-gray-400 text-xs mt-0.5">أرسل أول رسالة الآن</p>
                       </div>
                     </div>
-                  );
-                })}
-                <div ref={bottomRef} />
-              </div>
+                  ) : (
+                    msgs.map((msg, i) => {
+                      const senderId = msg.sender?._id || msg.sender;
+const mine = senderId === user?._id || msg._temp;
+                      const sep = sepNeeded(msgs, i);
+                      return (
+                        <div key={i}>
+                          {sep && (
+                            <div className="flex justify-center my-2">
+                              <span className="text-[10px] text-gray-400 bg-white px-3 py-1 rounded-full shadow-sm border border-gray-100">
+                                {dateBar(new Date(msg.createdAt))}
+                              </span>
+                            </div>
+                          )}
+                          <div className={`flex mb-1 ${mine ? 'justify-end' : 'justify-start'} items-end gap-1.5`}>
+                            {!mine && (
+                              <div className="shrink-0 mb-0.5">
+                                <Avatar name={other?.name} size="xs" radius="full" className="opacity-0 md:opacity-100" />
+                              </div>
+                            )}
+                            <div className={`max-w-[75%] md:max-w-[55%]`}>
+                              <div className={`px-3.5 py-2 text-sm leading-relaxed ${
+                                mine
+                                  ? 'bg-blue-500 text-white rounded-2xl rounded-br-sm'
+                                  : 'bg-white text-gray-800 rounded-2xl rounded-bl-sm border border-gray-100 shadow-sm'
+                              }`}>
+                                {msg.text}
+                              </div>
+                              <div className={`flex items-center gap-1 mt-0.5 px-1 ${mine ? 'justify-end' : 'justify-start'}`}>
+                                <span className="text-[9px] text-gray-400">
+                                  {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString('ar-AE', { hour: '2-digit', minute: '2-digit' }) : ''}
+                                </span>
+                                {mine && !msg._temp ? (
+                                  <FaCheck className={`text-[9px] ${msg.read ? 'text-blue-400' : 'text-gray-300'}`} />
+                                ) : mine && msg._temp ? (
+                                  <span className="w-2 h-2 border-1.5 border-gray-300 border-t-transparent rounded-full animate-spin" />
+                                ) : null}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                  <div ref={bottom} />
+                </div>
 
-              <div className="p-3 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
-                <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 rounded-2xl p-1.5 border border-slate-100 dark:border-slate-700">
-                  <input
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="اكتب رسالة..."
-                    className="flex-1 px-3 py-2 bg-transparent text-sm outline-none text-slate-700 dark:text-slate-300 placeholder:text-slate-400"
-                  />
-                  <button
-                    onClick={sendMessage}
-                    disabled={!text.trim()}
-                    className="p-2.5 bg-primary-500 text-white rounded-xl hover:bg-primary-600 disabled:opacity-40 disabled:cursor-not-allowed transition shadow-sm"
-                  >
-                    <FaPaperPlane className="text-sm" />
-                  </button>
+                {/* Input */}
+                <div className="px-3 py-2.5 bg-white border-t border-gray-100">
+                  <div className="flex items-center gap-2 bg-gray-50 rounded-2xl px-3 py-1 border border-gray-100 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500/10 transition-all">
+                    <button className="p-1 text-gray-400 hover:text-blue-500 transition shrink-0"><FaRegSmile className="text-lg" /></button>
+                    <input
+                      ref={inp}
+                      value={text}
+                      onChange={e => setText(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
+                      placeholder={sending ? '...' : 'اكتب رسالتك...'}
+                      className="flex-1 py-1.5 bg-transparent text-sm outline-none text-gray-700 placeholder:text-gray-400"
+                    />
+                    <button onClick={send} disabled={!text.trim() || sending}
+                      className="p-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shrink-0 shadow-sm">
+                      {sending ? <span className="block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <FaPaperPlane className="text-sm" />}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex-1 flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/30">
-              <div className="text-center">
-                <div className="w-20 h-20 bg-primary-50 dark:bg-primary-900/20 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                  <FaComment className="text-3xl text-primary-500" />
+              </motion.div>
+            ) : (
+              <motion.div key="e" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1 flex items-center justify-center">
+                <div className="text-center px-6">
+                  <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                    <FaComment className="text-blue-400 text-2xl" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-800 mb-1">رسائلك</h3>
+                  <p className="text-gray-400 text-sm">اختر محادثة من القائمة للبدء</p>
+                  <a href="/tutors" className="inline-flex items-center gap-2 mt-4 px-5 py-2 bg-blue-500 text-white rounded-xl text-sm font-semibold hover:bg-blue-600 transition shadow-sm">
+                    <FaUserCircle /> تصفح المدرّسين
+                  </a>
                 </div>
-                <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300 mb-1">المراسلات</h3>
-                <p className="text-sm text-slate-400 max-w-xs">اختر محادثة من القائمة لبدء المراسلة</p>
-              </div>
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

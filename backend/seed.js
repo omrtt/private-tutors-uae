@@ -1,139 +1,164 @@
 require('dotenv').config();
+const mongoose = require('mongoose');
+const connectDB = require('./config/db');
 const User = require('./models/User');
 const Tutor = require('./models/Tutor');
 const Booking = require('./models/Booking');
 const Review = require('./models/Review');
-const Test = require('./models/Test');
-const Post = require('./models/Post');
-
-const testData = [
-  { name: 'ALCPT', nameEn: 'ALCPT', description: 'اختبار تحديد مستوى اللغة الإنجليزية الأمريكي للقبول في البرامج الأكاديمية والعسكرية', subjects: ['اللغة الإنجليزية'], icon: '🌐' },
-  { name: 'SAT', nameEn: 'SAT', description: 'اختبار الكفاءة الدراسية للقبول في الجامعات الأمريكية', subjects: ['الرياضيات','اللغة الإنجليزية'], icon: '🎓' },
-  { name: 'IELTS', nameEn: 'IELTS', description: 'اختبار اللغة الإنجليزية الدولي للدراسة والعمل', subjects: ['اللغة الإنجليزية'], icon: '🌍' },
-  { name: 'TOEFL', nameEn: 'TOEFL', description: 'اختبار اللغة الإنجليزية كلغة أجنبية للقبول الجامعي', subjects: ['اللغة الإنجليزية'], icon: '🎓' },
-  { name: 'ACT', nameEn: 'ACT', description: 'اختبار القبول الجامعي الأمريكي', subjects: ['الرياضيات','العلوم','اللغة الإنجليزية'], icon: '📐' },
-  { name: 'IGCSE', nameEn: 'IGCSE', description: 'الشهادة الدولية العامة للتعليم الثانوي', subjects: ['الرياضيات','الفيزياء','الكيمياء','الأحياء','اللغة الإنجليزية','اللغة العربية'], icon: '📚' },
-  { name: 'ABITUR', nameEn: 'Abitur', description: 'شهادة الثانوية الألمانية للقبول الجامعي', subjects: ['الرياضيات','الفيزياء','الكيمياء','اللغة الألمانية'], icon: '🎓' },
-  { name: 'Baccalaureate', nameEn: 'Baccalaureate', description: 'شهادة البكالوريا الدولية', subjects: ['الرياضيات','العلوم','اللغات'], icon: '🌍' },
-];
-
-const tutorData = [
-  { name: 'أحمد حسن', email: 'ahmed@tutor.ae', phone: '+971501234567', subjects: ['الرياضيات','الفيزياء'], emirate: 'دبي', ratePerHour: 150, bio: 'مدرّس رياضيات وفيزياء بخبرة تزيد عن 10 سنوات.', experience: 10, qualifications: ['دكتوراه في الرياضيات','ماجستير فيزياء'], languages: ['العربية','الإنجليزية'], education: 'دكتوراه، جامعة الإمارات' },
-  { name: 'فاطمة المنصوري', email: 'fatima@tutor.ae', phone: '+971502345678', subjects: ['اللغة الإنجليزية','اللغة العربية'], emirate: 'أبوظبي', ratePerHour: 120, bio: 'متحدثة أصلية بالعربية، ومدرّسة إنجليزية معتمدة.', experience: 7, qualifications: ['CELTA','بكالوريوس أدب إنجليزي'], languages: ['العربية','الإنجليزية'], education: 'بكالوريوس، جامعة الإمارات' },
-  { name: 'عمر خالد', email: 'omar@tutor.ae', phone: '+971503456789', subjects: ['الكيمياء','الأحياء'], emirate: 'الشارقة', ratePerHour: 130, bio: 'متخصص في الكيمياء والأحياء للمرحلة الثانوية والجامعية.', experience: 5, qualifications: ['ماجستير كيمياء حيوية','بكالوريوس تربية'], languages: ['العربية','الإنجليزية'], education: 'ماجستير، جامعة الشارقة' },
-  { name: 'سارة محمد', email: 'sara@tutor.ae', phone: '+971504567890', subjects: ['علوم الحاسوب','البرمجة'], emirate: 'دبي', ratePerHour: 200, bio: 'مهندسة برمجيات تدرّس علوم الحاسوب والبرمجة.', experience: 8, qualifications: ['بكالوريوس علوم حاسوب','AWS معتمد'], languages: ['الإنجليزية','العربية'], education: 'بكالوريوس، جامعة خليفة' },
-  { name: 'عبدالله الزعابي', email: 'abdulla@tutor.ae', phone: '+971505678901', subjects: ['الرياضيات','الرياضيات المتقدمة'], emirate: 'عجمان', ratePerHour: 100, bio: 'مدرّس رياضيات لجميع المستويات حتى الجامعة.', experience: 4, qualifications: ['بكالوريوس رياضيات'], languages: ['العربية','الإنجليزية'], education: 'بكالوريوس، جامعة عجمان' },
-  { name: 'مريم الكتبي', email: 'mariam@tutor.ae', phone: '+971506789012', subjects: ['اللغة العربية','التربية الإسلامية'], emirate: 'رأس الخيمة', ratePerHour: 100, bio: 'متخصصة في اللغة العربية والتربية الإسلامية.', experience: 6, qualifications: ['ماجستير دراسات إسلامية','بكالوريوس لغة عربية'], languages: ['العربية'], education: 'ماجستير، جامعة الشارقة' },
-  { name: 'حسين علي', email: 'hussein@tutor.ae', phone: '+971507890123', subjects: ['الفيزياء','الهندسة'], emirate: 'دبي', ratePerHour: 180, bio: 'مهندس محترف يدرّس الفيزياء والمواد الهندسية.', experience: 12, qualifications: ['دكتوراه هندسة','ماجستير فيزياء'], languages: ['الإنجليزية','العربية'], education: 'دكتوراه، الجامعة الأمريكية في الشارقة' },
-  { name: 'نورة الفلاسي', email: 'noura@tutor.ae', phone: '+971508901234', subjects: ['اللغة الإنجليزية','الفرنسية'], emirate: 'أبوظبي', ratePerHour: 140, bio: 'مدرّسة لغات بخبرة تدريس دولية.', experience: 9, qualifications: ['ماجستير لغويات','DELF'], languages: ['الإنجليزية','العربية','الفرنسية'], education: 'ماجستير، جامعة السوربون' },
-  { name: 'خالد العامري', email: 'khalid@tutor.ae', phone: '+971509012345', subjects: ['الرياضيات','الاقتصاد'], emirate: 'عجمان', ratePerHour: 110, bio: 'مدرّس رياضيات واقتصاد بجداول مرنة.', experience: 6, qualifications: ['ماجستير إدارة أعمال','بكالوريوس اقتصاد'], languages: ['العربية','الإنجليزية'], education: 'ماجستير، كلية لندن للأعمال' },
-  { name: 'ليلى إبراهيم', email: 'layla@tutor.ae', phone: '+971500123456', subjects: ['العلوم','الأحياء'], emirate: 'الفجيرة', ratePerHour: 90, bio: 'مدرّسة علوم شغوفة تجعل التعلم ممتعاً.', experience: 3, qualifications: ['بكالوريوس أحياء','دبلوم تدريس'], languages: ['العربية','الإنجليزية'], education: 'بكالوريوس، جامعة الفجيرة' },
-];
-
-const testAssignments = [
-  ['ALCPT', 'SAT', 'IGCSE'],
-  ['IELTS', 'TOEFL', 'IGCSE'],
-  ['ALCPT', 'IGCSE'],
-  ['ALCPT', 'IGCSE'],
-  ['ALCPT', 'SAT', 'IGCSE'],
-  ['ALCPT'],
-  ['ALCPT', 'SAT', 'IGCSE'],
-  ['IELTS', 'TOEFL'],
-  ['ALCPT', 'SAT', 'IGCSE'],
-  ['ALCPT', 'IGCSE'],
-];
+const Payment = require('./models/Payment');
+const Schedule = require('./models/Schedule');
 
 async function seed() {
-  await User.deleteMany({});
-  await Tutor.deleteMany({});
-  await Booking.deleteMany({});
-  await Review.deleteMany({});
-  await Test.deleteMany({});
+  await connectDB();
 
-  for (const t of testData) {
-    await Test.create(t);
+  const STUDENT = '8b23c08beffc19dd1b4be49e';
+  const TUTORS = {
+    '665753f6ad3fee47e8c663f1': { id: '21a519bdba691d9b74e9e579', name: 'أحمد حسن', sub: 'الرياضيات', rate: 150 },
+    '10e86d365d8e92671570dbd5': { id: '52f75cd7fe42f18d27ee9f71', name: 'فاطمة المنصوري', sub: 'اللغة الإنجليزية', rate: 120 },
+    'cfdb98ab20024c661464ceaf': { id: '8580e4823a594aa2656a9225', name: 'عمر خالد', sub: 'الكيمياء', rate: 130 },
+    '856edda7199a09571c0c45fb': { id: 'fcab0d5f220e6d65e981e0d1', name: 'سارة محمد', sub: 'علوم الحاسوب', rate: 200 },
+    '7fc5d3db1f866f219cc9ccca': { id: '193e5431dc3c1abf52bf9a2a', name: 'عبدالله الزعابي', sub: 'الرياضيات', rate: 100 },
+  };
+
+  function seedId(n) { return `seed${String(n).padStart(6, '0')}`; }
+  function hoursAgo(n) {
+    const d = new Date(Date.now() - n * 60 * 60 * 1000);
+    return d.toISOString();
   }
-  console.log(`تم إنشاء ${testData.length} اختبار قياسي`);
 
-  for (let idx = 0; idx < tutorData.length; idx++) {
-    const t = tutorData[idx];
-    const user = await User.create({
-      name: t.name, email: t.email, password: 'password123',
-      phone: t.phone, role: 'tutor',
+  const userIds = Object.keys(TUTORS);
+
+  // Generate bookings
+  const bookingDocs = [];
+  const paymentDocs = [];
+  const reviewDocs = [];
+  const scheduleDocs = [];
+
+  // Past bookings (completed)
+  for (let i = 0; i < 12; i++) {
+    const ui = userIds[i % userIds.length];
+    const t = TUTORS[ui];
+    const bid = seedId(i + 1);
+    const createdAt = hoursAgo(72 + i * 12);
+    const hours = 1 + (i % 3);
+    const amount = t.rate * hours;
+    const statuses = ['completed', 'completed', 'completed', 'confirmed', 'pending'];
+    const status = statuses[i % statuses.length];
+    const subjects = [t.sub, i % 2 === 0 ? t.sub : 'الرياضيات'];
+
+    bookingDocs.push({
+      _id: bid,
+      student: STUDENT,
+      tutor: t.id,
+      subject: subjects[i % subjects.length],
+      date: new Date(Date.now() - (i * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+      time: `${8 + (i % 10)}:00`,
+      duration: hours,
+      totalAmount: amount,
+      status,
+      createdAt,
+      notes: i % 3 === 0 ? `ملاحظة حجز رقم ${i + 1}` : '',
     });
-    await Tutor.create({
-      user: user._id, bio: t.bio, subjects: t.subjects,
-      qualifications: t.qualifications, experience: t.experience,
-      ratePerHour: t.ratePerHour, emirate: t.emirate,
-      languages: t.languages, education: t.education,
-      specializedTests: testAssignments[idx] || [],
-      isVerified: true, teachingMode: 'both',
-      rating: Number((3 + Math.random() * 2).toFixed(1)),
-      numReviews: Math.floor(Math.random() * 20) + 1,
-      isAvailable: true,
+
+    if (status === 'completed') {
+      paymentDocs.push({
+        _id: seedId(100 + i),
+        bookingId: bid,
+        student: STUDENT,
+        amount,
+        method: ['card', 'card', 'card', 'wallet', 'bank'][i % 5],
+        status: 'completed',
+        createdAt,
+        processedAt: hoursAgo(72 + i * 12 - 1),
+      });
+
+      reviewDocs.push({
+        _id: seedId(200 + i),
+        bookingId: bid,
+        student: STUDENT,
+        tutorUser: ui,
+        rating: (3 + (i % 3)).toString(),
+        comment: [
+          'مدرّس ممتاز، شرحه واضح جداً',
+          'تجربة جيدة، أنصح بالتعامل',
+          'مدرّس محترف ومتمكن',
+          'شرح رائع وأسلوب جميل',
+          'مفيد جداً وساعدني في فهم المادة',
+          'مدرّس صبور ومتفهم للطلاب',
+        ][i % 6],
+        createdAt: hoursAgo(72 + i * 12 - 2),
+      });
+    }
+  }
+
+  // Future bookings (upcoming)
+  for (let i = 0; i < 4; i++) {
+    const ui = userIds[i % userIds.length];
+    const t = TUTORS[ui];
+    const bid = seedId(20 + i);
+    const future = new Date(Date.now() + (i + 1) * 7 * 24 * 60 * 60 * 1000);
+
+    bookingDocs.push({
+      _id: bid,
+      student: STUDENT,
+      tutor: t.id,
+      subject: t.sub,
+      date: future.toISOString().split('T')[0],
+      time: `${10 + i * 2}:00`,
+      duration: 2,
+      totalAmount: t.rate * 2,
+      status: 'confirmed',
+      createdAt: hoursAgo(2),
+      notes: '',
     });
-    console.log(`تم إنشاء المدرّس: ${t.name}`);
   }
 
-  await Post.deleteMany({});
-
-  const tutors = await Tutor.find({});
-  const samplePosts = [
-    { content: '🔥 درس جديد في التفاضل والتكامل متاح الآن! سجل واحجز جلستك.', media: ['https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600'], likes: [], comments: [] },
-    { content: '🎉 ألف مبروك لطلابي على نتائجهم الممتازة في اختبار EMSAT! فخور بكم جميعاً.', media: ['https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=600'], likes: [], comments: [] },
-    { content: '📚 نصائح للمذاكرة الفعالة: 1️⃣ حدد أهدافك 2️⃣ نظم وقتك 3️⃣ خذ فترات راحة 4️⃣ راجع باستمرار. شارك مع زملائك!', media: ['https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600'], likes: [], comments: [] },
-    { content: '⭐ تجربتي مع تدريس اللغة الإنجليزية لأكثر من ٧ سنوات. السر هو الممارسة اليومية والثقة بالنفس. من مستعد للبدء؟', media: ['https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600'], likes: [], comments: [] },
-    { content: '🧪 تجربة كيميائية مسلية اليوم! تعلمنا عن التفاعلات الكيميائية بطريقة عملية. العلم متعة حقيقية.', media: ['https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600'], likes: [], comments: [] },
-    { content: '💻 ورشة عمل جديدة في أساسيات البرمجة بلغة بايثون. من الصفر إلى الاحتراف. سجل الآن الأماكن محدودة!', media: ['https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600'], likes: [], comments: [] },
-    { content: '🏆 حصل ثلاثة من طلابي على منح دراسية في جامعات مرموقة. التعليم هو المفتاح لمستقبل أفضل.', media: ['https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600'], likes: [], comments: [] },
-    { content: '📖 جلسة مراجعة شاملة لاختبار SAT القادم. غطينا جميع الأقسام مع تمارين تفاعلية. استعدوا للتميز!', media: ['https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=600'], likes: [], comments: [] },
-    { content: '🎯 ١٠ نصائح لتحسين مهارات الكتابة باللغة العربية الفصحى. مهم جداً للطلاب في المراحل المتقدمة.', media: ['https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600'], likes: [], comments: [] },
-    { content: '🌍 درس اليوم كان عن الحضارة الإسلامية ومساهماتها في العلوم. فخورون بتاريخنا العظيم.', media: ['https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600'], likes: [], comments: [] },
-  ];
-  for (let i = 0; i < samplePosts.length; i++) {
-    const tutor = tutors[i % tutors.length];
-    const tutorUser = await User.findById(tutor.user);
-    const post = samplePosts[i];
-    post.tutor = tutorUser._id;
-    if (i % 3 === 0) {
-      post.likes = [tutors[(i + 1) % tutors.length].user, tutors[(i + 2) % tutors.length].user];
-    }
-    if (i % 4 === 0) {
-      post.comments = [
-        { user: tutors[(i + 1) % tutors.length].user, text: 'منشور رائع! استمر 👍', createdAt: new Date(Date.now() - 3600000).toISOString(), _id: require('crypto').randomBytes(12).toString('hex') },
-        { user: tutors[(i + 2) % tutors.length].user, text: 'مفيد جداً، شكراً لمشاركتنا 🙏', createdAt: new Date(Date.now() - 1800000).toISOString(), _id: require('crypto').randomBytes(12).toString('hex') },
-      ];
-    }
-    await Post.create(post);
+  // Tutor schedules
+  for (const [uid, t] of Object.entries(TUTORS)) {
+    const activeDays = [0, 1, 2, 3, 4];
+    if (Math.random() > 0.5) activeDays.push(6);
+    activeDays.forEach((dow) => {
+      const sid = seedId(300 + parseInt(uid.slice(-2), 16) % 100 + dow);
+      ['09:00-12:00', '14:00-17:00', '19:00-21:00'].forEach((slot, si) => {
+        const [startTime, endTime] = slot.split('-');
+        scheduleDocs.push({
+          _id: sid + (si === 0 ? '' : ['b', 'c'][si - 1] || ''),
+          tutor: t.id,
+          dayOfWeek: dow,
+          startTime,
+          endTime,
+          isActive: true,
+          createdAt: hoursAgo(168),
+        });
+      });
+    });
   }
-  console.log(`تم إنشاء ${samplePosts.length} منشور`);
 
-  await User.create({
-    name: 'طالب تجريبي', email: 'student@test.ae',
-    password: 'password123', phone: '+971500000000', role: 'student',
-  });
+  // Insert all data using the models
+  if (bookingDocs.length > 0) {
+    for (const b of bookingDocs) await Booking.create(b);
+  }
+  if (paymentDocs.length > 0) {
+    for (const p of paymentDocs) await Payment.create(p);
+  }
+  if (reviewDocs.length > 0) {
+    for (const r of reviewDocs) await Review.create(r);
+  }
+  if (scheduleDocs.length > 0) {
+    for (const s of scheduleDocs) await Schedule.create(s);
+  }
 
-  console.log('تم تجهيز البيانات');
-  console.log('دخول المدرسين: أي بريد مدرّس / password123');
-  console.log('دخول الطالب: student@test.ae / password123');
-  process.exit(0);
+  console.log(`✅ Seeded into MongoDB:
+   - ${bookingDocs.length} bookings (${bookingDocs.filter(b => b.status === 'completed').length} completed, ${bookingDocs.filter(b => b.status !== 'completed').length} upcoming/pending)
+   - ${paymentDocs.length} payments
+   - ${reviewDocs.length} reviews
+   - ${scheduleDocs.length} tutor schedules
+  `);
+
+  await mongoose.disconnect();
 }
 
-seed().catch((err) => { console.error('خطأ:', err); process.exit(1); });
-
-const adminUser = {
-  name: 'مشرف النظام',
-  email: 'admin@admin.ae',
-  password: 'admin123',
-  phone: '+971509999999',
-  role: 'admin',
-};
-(async () => {
-  const existingAdmin = await User.findOne({ email: adminUser.email });
-  if (!existingAdmin) {
-    await User.create(adminUser);
-    console.log('Admin user created: admin@admin.ae / admin123');
-  } else {
-    console.log('Admin user already exists');
-  }
-})();
+seed().catch((err) => {
+  console.error('Seed failed:', err);
+  process.exit(1);
+});

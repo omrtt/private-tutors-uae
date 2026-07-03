@@ -1,0 +1,65 @@
+[
+  {
+    "_id": "rec001",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "subject": "الرياضيات",
+    "grade": 92,
+    "maxGrade": 100,
+    "notes": "امتحان نهاية الفصل - ممتاز",
+    "createdAt": "2026-05-15T10:00:00.000Z"
+  },
+  {
+    "_id": "rec002",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "subject": "اللغة الإنجليزية",
+    "grade": 78,
+    "maxGrade": 100,
+    "notes": "امتحان منتصف الفصل - جيد جداً",
+    "createdAt": "2026-05-20T10:00:00.000Z"
+  },
+  {
+    "_id": "rec003",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "subject": "الفيزياء",
+    "grade": 85,
+    "maxGrade": 100,
+    "notes": "امتحان عملي",
+    "createdAt": "2026-06-01T10:00:00.000Z"
+  },
+  {
+    "_id": "rec004",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "subject": "علوم الحاسوب",
+    "grade": 95,
+    "maxGrade": 100,
+    "notes": "مشروع التخرج - ممتاز",
+    "createdAt": "2026-06-10T10:00:00.000Z"
+  },
+  {
+    "_id": "rec005",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "subject": "الكيمياء",
+    "grade": 67,
+    "maxGrade": 100,
+    "notes": "امتحان الفصل الأول - مقبول",
+    "createdAt": "2026-04-20T10:00:00.000Z"
+  },
+  {
+    "_id": "rec006",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "subject": "اللغة العربية",
+    "grade": 88,
+    "maxGrade": 100,
+    "notes": "امتحان نهاية الفصل - جيد جداً",
+    "createdAt": "2026-06-25T10:00:00.000Z"
+  },
+  {
+    "_id": "3a510e68c40aade5d00f4ef4",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "subject": "رلاؤء",
+    "grade": 3,
+    "maxGrade": 100,
+    "notes": "",
+    "createdAt": "2026-07-01T04:50:15.203Z"
+  }
+]

@@ -42,6 +42,53 @@ const illustrations = {
       </svg>
     </div>
   ),
+  notifications: (
+    <div className="w-28 h-28 mx-auto mb-5 rounded-3xl bg-gradient-to-br from-accent-50 to-accent-100 dark:from-accent-900/30 dark:to-accent-800/20 flex items-center justify-center shadow-inner">
+      <svg className="w-16 h-16" viewBox="0 0 100 100" fill="none">
+        <path d="M50 20C38 20 28 30 28 42V58L22 68H78L72 58V42C72 30 62 20 50 20Z" stroke="currentColor" strokeWidth="4" className="text-accent-300 dark:text-accent-600" />
+        <path d="M40 68V74C40 80 46 84 50 84C54 84 60 80 60 74V68" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="text-accent-400 dark:text-accent-500" />
+        <circle cx="50" cy="42" r="6" fill="currentColor" className="text-accent-200 dark:text-accent-700" />
+        <path d="M50 48V56M50 58V60" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="text-accent-500" />
+        <rect x="34" y="78" width="32" height="4" rx="2" fill="currentColor" className="text-accent-100 dark:text-accent-800" />
+      </svg>
+    </div>
+  ),
+  records: (
+    <div className="w-28 h-28 mx-auto mb-5 rounded-3xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 flex items-center justify-center shadow-inner">
+      <svg className="w-16 h-16" viewBox="0 0 100 100" fill="none">
+        <rect x="22" y="16" width="56" height="68" rx="8" stroke="currentColor" strokeWidth="4" className="text-blue-300 dark:text-blue-600" />
+        <rect x="32" y="30" width="36" height="3" rx="1.5" fill="currentColor" className="text-blue-200 dark:text-blue-700" />
+        <rect x="32" y="40" width="28" height="3" rx="1.5" fill="currentColor" className="text-blue-200 dark:text-blue-700" />
+        <rect x="32" y="50" width="32" height="3" rx="1.5" fill="currentColor" className="text-blue-200 dark:text-blue-700" />
+        <circle cx="50" cy="66" r="10" fill="currentColor" className="text-blue-200 dark:text-blue-700" />
+        <path d="M45 66L48 69L55 62" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500" />
+        <rect x="28" y="84" width="44" height="4" rx="2" fill="currentColor" className="text-blue-100 dark:text-blue-800" />
+      </svg>
+    </div>
+  ),
+  profile: (
+    <div className="w-28 h-28 mx-auto mb-5 rounded-3xl bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/30 dark:to-violet-800/20 flex items-center justify-center shadow-inner">
+      <svg className="w-16 h-16" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="35" r="15" stroke="currentColor" strokeWidth="4" className="text-violet-300 dark:text-violet-600" />
+        <path d="M22 85C22 70 35 58 50 58C65 58 78 70 78 85" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="text-violet-300 dark:text-violet-600" />
+        <path d="M62 30L72 20" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="text-violet-400" />
+        <path d="M72 20L78 26" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="text-violet-400" />
+        <circle cx="74" cy="22" r="3" fill="currentColor" className="text-violet-200 dark:text-violet-700" />
+        <rect x="40" y="78" width="20" height="6" rx="3" fill="currentColor" className="text-violet-200 dark:text-violet-700" />
+      </svg>
+    </div>
+  ),
+  results: (
+    <div className="w-28 h-28 mx-auto mb-5 rounded-3xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 flex items-center justify-center shadow-inner">
+      <svg className="w-16 h-16" viewBox="0 0 100 100" fill="none">
+        <circle cx="38" cy="38" r="18" stroke="currentColor" strokeWidth="4" className="text-primary-300 dark:text-primary-600" />
+        <circle cx="38" cy="38" r="8" fill="currentColor" className="text-primary-200 dark:text-primary-700" />
+        <path d="M52 52L66 66" stroke="currentColor" strokeWidth="5" strokeLinecap="round" className="text-primary-400" />
+        <rect x="28" y="72" width="44" height="5" rx="2.5" fill="currentColor" className="text-primary-100 dark:text-primary-800" />
+        <path d="M42 77L42 85C42 88 46 90 50 90C54 90 58 88 58 85L58 77" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="text-primary-300 dark:text-primary-600" />
+      </svg>
+    </div>
+  ),
   tutors: (
     <div className="w-28 h-28 mx-auto mb-5 rounded-3xl bg-gradient-to-br from-secondary-50 to-secondary-100 dark:from-secondary-900/30 dark:to-secondary-800/20 flex items-center justify-center shadow-inner">
       <svg className="w-16 h-16" viewBox="0 0 100 100" fill="none">

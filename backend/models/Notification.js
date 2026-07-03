@@ -13,6 +13,8 @@ const Notification = {
 
   async findById(id) { return col.findById(id); },
 
+  async findByIdAndDelete(id) { return col.findByIdAndDelete(id); },
+
   async markAsRead(notificationId) {
     return col.findByIdAndUpdate(notificationId, { read: true });
   },

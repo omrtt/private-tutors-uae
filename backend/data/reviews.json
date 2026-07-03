@@ -1,1 +1,91 @@
-[]
+[
+  {
+    "_id": "seed000200",
+    "bookingId": "seed000001",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "665753f6ad3fee47e8c663f1",
+    "rating": "3",
+    "comment": "مدرّس ممتاز، شرحه واضح جداً",
+    "createdAt": "2026-06-28T06:43:50.386Z",
+    "approved": true
+  },
+  {
+    "_id": "seed000201",
+    "bookingId": "seed000002",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "10e86d365d8e92671570dbd5",
+    "rating": "4",
+    "comment": "تجربة جيدة، أنصح بالتعامل",
+    "createdAt": "2026-06-27T18:43:50.386Z",
+    "approved": true
+  },
+  {
+    "_id": "seed000202",
+    "bookingId": "seed000003",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "cfdb98ab20024c661464ceaf",
+    "rating": "5",
+    "comment": "مدرّس محترف ومتمكن",
+    "createdAt": "2026-06-27T06:43:50.386Z",
+    "approved": true
+  },
+  {
+    "_id": "seed000205",
+    "bookingId": "seed000006",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "665753f6ad3fee47e8c663f1",
+    "rating": "5",
+    "comment": "مدرّس صبور ومتفهم للطلاب",
+    "createdAt": "2026-06-25T18:43:50.386Z",
+    "approved": true
+  },
+  {
+    "_id": "seed000206",
+    "bookingId": "seed000007",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "10e86d365d8e92671570dbd5",
+    "rating": "3",
+    "comment": "مدرّس ممتاز، شرحه واضح جداً",
+    "createdAt": "2026-06-25T06:43:50.386Z",
+    "approved": true
+  },
+  {
+    "_id": "seed000207",
+    "bookingId": "seed000008",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "cfdb98ab20024c661464ceaf",
+    "rating": "4",
+    "comment": "تجربة جيدة، أنصح بالتعامل",
+    "createdAt": "2026-06-24T18:43:50.386Z",
+    "approved": true
+  },
+  {
+    "_id": "seed000210",
+    "bookingId": "seed000011",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "665753f6ad3fee47e8c663f1",
+    "rating": "4",
+    "comment": "مفيد جداً وساعدني في فهم المادة",
+    "createdAt": "2026-06-23T06:43:50.386Z",
+    "approved": true
+  },
+  {
+    "_id": "seed000211",
+    "bookingId": "seed000012",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "tutorUser": "10e86d365d8e92671570dbd5",
+    "rating": "5",
+    "comment": "مدرّس صبور ومتفهم للطلاب",
+    "createdAt": "2026-06-22T18:43:50.386Z",
+    "approved": true
+  },
+  {
+    "_id": "0f09d9427df35a14534aada2",
+    "tutor": "27ebacc7defd175eaefff43e",
+    "student": "8b23c08beffc19dd1b4be49e",
+    "rating": 2,
+    "comment": "ماشي حالو",
+    "createdAt": "2026-07-01T04:49:09.117Z",
+    "approved": true
+  }
+]

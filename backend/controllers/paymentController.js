@@ -8,7 +8,7 @@ exports.createPayment = async (req, res) => {
     const { bookingId, method } = req.body;
     const booking = await Booking.findById(bookingId);
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
-    if (booking.student !== req.user._id) return res.status(403).json({ message: 'Not authorized' });
+    if (String(booking.student) !== String(req.user._id)) return res.status(403).json({ message: 'Not authorized' });
 
     const existing = await Payment.findByBooking(bookingId);
     if (existing) return res.status(400).json({ message: 'Payment already exists' });
@@ -26,7 +26,7 @@ exports.createPayment = async (req, res) => {
 
     res.status(201).json(payment);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -49,9 +49,9 @@ exports.processPayment = async (req, res) => {
 
     if (payment.status !== 'pending') return res.status(400).json({ message: 'Payment already processed' });
 
-    await new Promise((r) => setTimeout(r, 1500));
+    await new Promise((r) => setTimeout(r, 300));
 
-    const success = Math.random() > 0.1;
+    const success = true; // Always succeed in demo
     const status = success ? 'completed' : 'failed';
     const updated = await Payment.update(req.params.id, {
       status,
@@ -82,7 +82,7 @@ exports.processPayment = async (req, res) => {
 
     res.json(updated);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -98,7 +98,7 @@ exports.getPayment = async (req, res) => {
     }
     res.json(payment);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -107,7 +107,7 @@ exports.getMyPayments = async (req, res) => {
     let payments = await Payment.findByStudent(req.user._id);
     res.json(payments);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -117,6 +117,6 @@ exports.getPaymentByBooking = async (req, res) => {
     if (!payment) return res.status(404).json({ message: 'No payment found' });
     res.json(payment);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
