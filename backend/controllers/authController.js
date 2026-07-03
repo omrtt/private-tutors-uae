@@ -1,9 +1,6 @@
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const sendEmail = require('../utils/email');
-const { generateResetToken } = require('../utils/generateToken');
-
-const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE });
+const { generateResetToken, generateToken } = require('../utils/generateToken');
 
 exports.forgotPassword = async (req, res) => {
   try {

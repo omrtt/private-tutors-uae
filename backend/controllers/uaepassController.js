@@ -1,7 +1,7 @@
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const axios = require('axios');
+const { generateToken } = require('../utils/generateToken');
 
 const UAEPASS_URLS = {
   sandbox: {
@@ -23,10 +23,6 @@ function getEnv(key, fallback) {
 function getUrls() {
   const env = getEnv('UAE_PASS_ENV', 'sandbox');
   return UAEPASS_URLS[env] || UAEPASS_URLS.sandbox;
-}
-
-function generateToken(id) {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || '30d' });
 }
 
 exports.login = (req, res) => {
