@@ -77,7 +77,7 @@ export default function App() {
               { path: '/about', el: <About /> },
               { path: '/contact', el: <Contact /> },
               { path: '/chat', el: <ProtectedRoute><Chat /></ProtectedRoute> },
-              { path: '/admin', el: <AdminDashboard /> },
+              { path: '/admin', el: <ProtectedRoute><AdminDashboard /></ProtectedRoute> },
               { path: '/level-test', el: <ProtectedRoute><LevelTest /></ProtectedRoute> },
               { path: '/institutes', el: <Institutes /> },
               { path: '/institutes/:id', el: <InstituteDetail /> },

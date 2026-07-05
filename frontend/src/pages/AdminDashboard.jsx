@@ -126,7 +126,7 @@ function SearchBar({ value, onChange, placeholder }) {
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const tabs = [
     { id: 'dashboard', label: 'لوحة التحكم', icon: FaChartLine },
     { id: 'users', label: 'المستخدمين', icon: FaUsers },
@@ -172,6 +172,7 @@ export default function AdminDashboard() {
   const [newPage, setNewPage] = useState({ slug: '', title: '', content: '', published: false });
   const [editingPage, setEditingPage] = useState(null);
 
+  if (authLoading) return <div className="flex items-center justify-center min-h-screen"><FaSpinner className="animate-spin text-4xl text-primary-500" /></div>;
   if (!user || user.role !== 'admin') return <Navigate to="/" />;
 
   const setLoad = (key) => setLoading(p => ({ ...p, [key]: true }));
