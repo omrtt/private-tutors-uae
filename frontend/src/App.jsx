@@ -6,6 +6,7 @@ import BackToTop from './components/BackToTop';
 import SEO from './components/SEO';
 import ProtectedRoute from './components/ProtectedRoute';
 import AnimatedBackground from './components/AnimatedBackground';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
@@ -41,6 +42,7 @@ function ScrollToTop() {
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-900 relative">
       <AnimatedBackground className="fixed inset-0 z-0" />
       <SEO />
@@ -91,6 +93,7 @@ export default function App() {
       <BackToTop />
       <Footer />
     </div>
+    </ErrorBoundary>
   );
 }
 
