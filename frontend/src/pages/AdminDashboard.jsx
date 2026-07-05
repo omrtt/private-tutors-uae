@@ -18,11 +18,27 @@ import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Cart
 import SEO from '../components/SEO';
 
 function Spinner() {
-  return <div className="text-center py-16"><FaSpinner className="animate-spin text-3xl text-primary-500 mx-auto mb-3" /><p className="text-slate-400">جاري التحميل...</p></div>;
+  return (
+    <div className="flex flex-col items-center justify-center py-20">
+      <div className="relative">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg shadow-primary-500/20">
+          <FaSpinner className="animate-spin text-white text-lg" />
+        </div>
+      </div>
+      <p className="text-sm text-slate-400 mt-4">جاري التحميل...</p>
+    </div>
+  );
 }
 
-function Empty({ text }) {
-  return <div className="text-center py-16 text-slate-400"><FaExclamationTriangle className="text-3xl mx-auto mb-3 opacity-50" /><p>{text || 'لا توجد نتائج'}</p></div>;
+function Empty({ text, icon: Icon }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-20">
+      <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
+        {Icon ? <Icon className="text-2xl text-slate-400" /> : <FaExclamationTriangle className="text-2xl text-slate-400" />}
+      </div>
+      <p className="text-sm text-slate-400">{text || 'لا توجد نتائج'}</p>
+    </div>
+  );
 }
 
 function StatCard({ icon: Icon, label, value, sub, color, onClick }) {
@@ -117,9 +133,9 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82ca9d'
 
 function SearchBar({ value, onChange, placeholder }) {
   return (
-    <div className="relative">
+    <div className="relative max-w-xs">
       <FaSearch className="absolute start-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm" />
-      <input className="input-field ps-10 h-10 text-sm rounded-xl" placeholder={placeholder || 'بحث...'} value={value} onChange={e => onChange(e.target.value)} />
+      <input className="w-full h-10 pe-4 ps-10 text-sm rounded-xl border-2 border-slate-100 bg-white focus:border-primary-300 focus:ring-2 focus:ring-primary-500/10 outline-none transition-all text-slate-700 placeholder:text-slate-400" placeholder={placeholder || 'بحث...'} value={value} onChange={e => onChange(e.target.value)} />
     </div>
   );
 }
@@ -147,6 +163,10 @@ export default function AdminDashboard() {
     { id: 'export', label: 'تصدير البيانات', icon: FaFileExport },
   ];
   const [activeTab, setActiveTab] = useState('dashboard');
+  const isSupport = user?.role === 'support';
+  const allowedTabs = isSupport
+    ? tabs.filter(t => ['dashboard', 'users', 'bookings', 'contact'].includes(t.id))
+    : tabs;
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [tutors, setTutors] = useState([]);
@@ -168,12 +188,15 @@ export default function AdminDashboard() {
   const [auditLogs, setAuditLogs] = useState([]);
   const [newCoupon, setNewCoupon] = useState({ code: '', discountPercent: 10, maxUses: 100, expiresAt: '' });
   const [editingCoupon, setEditingCoupon] = useState(null);
+  const [showCreateUser, setShowCreateUser] = useState(false);
+  const [newUser, setNewUser] = useState({ name: '', phone: '', password: '', role: 'student' });
+  const [creatingUser, setCreatingUser] = useState(false);
   const [bulkNotif, setBulkNotif] = useState({ message: '', role: 'all', type: 'info' });
   const [newPage, setNewPage] = useState({ slug: '', title: '', content: '', published: false });
   const [editingPage, setEditingPage] = useState(null);
 
   if (authLoading) return <div className="flex items-center justify-center min-h-screen"><FaSpinner className="animate-spin text-4xl text-primary-500" /></div>;
-  if (!user || user.role !== 'admin') return <Navigate to="/" />;
+  if (!user || (user.role !== 'admin' && user.role !== 'support')) return <Navigate to="/" />;
 
   const setLoad = (key) => setLoading(p => ({ ...p, [key]: true }));
   const clearLoad = (key) => setLoading(p => ({ ...p, [key]: false }));
@@ -242,6 +265,23 @@ export default function AdminDashboard() {
     await axios.delete('/api/admin/users/' + id);
     setUsers(users.filter(u => u._id !== id));
     setStats(null);
+  };
+
+  const handleCreateUser = async () => {
+    if (!newUser.name || !newUser.phone || !newUser.password) return toast.error('الاسم ورقم الهاتف وكلمة السر مطلوبة');
+    setCreatingUser(true);
+    try {
+      const r = await axios.post('/api/admin/users', newUser);
+      setUsers([r.data.user, ...users]);
+      setShowCreateUser(false);
+      setNewUser({ name: '', phone: '', password: '', role: 'student' });
+      setStats(null);
+      toast.success(r.data.message || 'تم إنشاء المستخدم');
+    } catch (e) {
+      toast.error(e.response?.data?.message || 'فشل إنشاء المستخدم');
+    } finally {
+      setCreatingUser(false);
+    }
   };
 
   const handleApproveTutor = async (id) => {
@@ -453,32 +493,33 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 flex">
-      <SEO title="لوحة الإدارة" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100/50 flex">
+      <SEO title={isSupport ? 'لوحة الدعم' : 'لوحة الإدارة'} />
 
       {/* Sidebar */}
-      <aside className="w-56 lg:w-64 shrink-0 bg-white border-l border-slate-100 min-h-screen flex flex-col">
+      <aside className="w-56 lg:w-64 shrink-0 bg-white border-l border-slate-200/80 min-h-screen flex flex-col shadow-sm">
         <div className="p-4 lg:p-5 border-b border-slate-100">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary-500 via-primary-600 to-purple-600 flex items-center justify-center shadow-lg shadow-primary-500/20">
               <FaChartLine className="text-white text-sm" />
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-slate-900">لوحة الإدارة</h1>
-              <p className="text-[11px] text-slate-400">{user?.name}</p>
+            <div className="min-w-0">
+              <h1 className="text-base font-extrabold text-slate-900 tracking-tight">{isSupport ? 'لوحة الدعم' : 'لوحة الإدارة'}</h1>
+              <p className="text-[11px] text-slate-400 truncate">{user?.name}</p>
             </div>
           </div>
         </div>
-        <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          {tabs.map(tab => (
+        <nav className="flex-1 overflow-y-auto p-3 space-y-0.5 scrollbar-thin">
+          {allowedTabs.map(tab => (
             <button key={tab.id} onClick={() => { setActiveTab(tab.id); setSearch(''); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all text-start ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-start relative ${
                 activeTab === tab.id
-                  ? 'bg-primary-50 text-primary-600 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                  ? 'bg-gradient-to-r from-primary-50 to-transparent text-primary-700 font-bold shadow-sm border border-primary-100'
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50 border border-transparent'
               }`}
             >
-              <tab.icon className="text-sm shrink-0" />
+              {activeTab === tab.id && <span className="absolute end-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full bg-primary-500 shadow-sm shadow-primary-500/50" />}
+              <tab.icon className={`text-sm shrink-0 ${activeTab === tab.id ? 'text-primary-500' : 'text-slate-400'}`} />
               <span className="truncate">{tab.label}</span>
             </button>
           ))}
@@ -549,40 +590,77 @@ export default function AdminDashboard() {
 
         {activeTab === 'users' && (
           <>
-            <div className="mb-4">
-              <SearchBar value={search} onChange={setSearch} placeholder="بحث عن مستخدم بالاسم أو البريد..." />
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20"><FaUsers className="text-white text-sm" /></div>
+                <div>
+                  <h2 className="text-lg font-extrabold text-slate-900">المستخدمين</h2>
+                  <p className="text-xs text-slate-400">إدارة جميع المستخدمين في المنصة</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <SearchBar value={search} onChange={setSearch} placeholder="بحث بالاسم أو البريد..." />
+                {!isSupport && <button onClick={() => setShowCreateUser(!showCreateUser)} className={`h-10 px-4 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${showCreateUser ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-primary-500 text-white hover:bg-primary-600 shadow-lg shadow-primary-500/20'}`}>
+                  {showCreateUser ? <FaTimesCircle /> : <FaUserPlus />} {showCreateUser ? 'إلغاء' : 'إضافة مستخدم'}
+                </button>}
+              </div>
             </div>
+
+            {!isSupport && showCreateUser && (
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200/80 shadow-sm p-5 mb-6">
+                <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><FaUserPlus className="text-blue-500" />إنشاء مستخدم جديد</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-3">
+                  <input className="input-field h-10 text-sm" placeholder="الاسم الكامل" value={newUser.name} onChange={e => setNewUser({ ...newUser, name: e.target.value })} />
+                  <div className="relative">
+                    <span className="absolute start-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">+971</span>
+                    <input className="input-field h-10 text-sm ps-14" placeholder="5X XXX XXXX" value={newUser.phone} onChange={e => setNewUser({ ...newUser, phone: e.target.value.replace(/[^0-9]/g, '') })} />
+                  </div>
+                  <input className="input-field h-10 text-sm" type="password" placeholder="كلمة السر" value={newUser.password} onChange={e => setNewUser({ ...newUser, password: e.target.value })} />
+                  <select className="input-field h-10 text-sm" value={newUser.role} onChange={e => setNewUser({ ...newUser, role: e.target.value })}>
+                    <option value="student">طالب</option>
+                    <option value="tutor">مدرّس</option>
+                    <option value="admin">مشرف</option>
+                  </select>
+                </div>
+                <button onClick={handleCreateUser} disabled={creatingUser} className="btn-primary h-10 text-sm flex items-center justify-center gap-2">
+                  {creatingUser ? <FaSpinner className="animate-spin" /> : <FaCheckCircle />}
+                  {creatingUser ? 'جاري الإنشاء...' : 'إنشاء المستخدم'}
+                </button>
+              </div>
+            )}
             {loading.users ? <Spinner /> : filteredUsers.length === 0 ? <Empty text="لا يوجد مستخدمين" /> : (
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="divide-y divide-slate-50">
+              <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div className="divide-y divide-slate-100">
                   {filteredUsers.map(u => (
-                    <div key={u._id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition gap-3">
+                    <div key={u._id} className="flex items-center justify-between px-5 py-4 hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent transition-all duration-150 gap-3">
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 ${
-                          u.role === 'admin' ? 'bg-purple-100 text-purple-600' : u.role === 'tutor' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'
+                        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center text-sm font-bold shrink-0 shadow-sm ${
+                          u.role === 'admin' ? 'bg-purple-100 text-purple-600' : u.role === 'tutor' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'
                         }`}>{u.name?.charAt(0)}</div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-slate-800 truncate">{u.name}</p>
-                          <p className="text-xs text-slate-400 truncate ltr:text-left text-left direction-ltr" dir="ltr">{u.email}</p>
+                          <p className="font-bold text-slate-800 truncate flex items-center gap-2">{u.name}</p>
+                          <p className="text-xs text-slate-400 truncate flex items-center gap-2 mt-0.5">
+                            <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold ${
+                              u.role === 'admin' ? 'bg-purple-50 text-purple-600' : u.role === 'tutor' ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600'
+                            }`}>{u.role === 'tutor' ? 'مدرّس' : u.role === 'admin' ? 'مشرف' : 'طالب'}</span>
+                            <span className="ltr:text-left text-left direction-ltr" dir="ltr">{u.email}</span>
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <span className={`badge text-xs font-medium ${
-                          u.role === 'admin' ? 'bg-purple-50 text-purple-600' : u.role === 'tutor' ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600'
-                        }`}>{u.role === 'tutor' ? 'مدرّس' : u.role === 'admin' ? 'مشرف' : 'طالب'}</span>
                         <Badge status={u.isActive ? 'active' : 'false'} />
-                        {u.role !== 'admin' && (
+                        {u.role !== 'admin' && !isSupport && (
                           <>
                             {u.isActive ? (
-                              <button onClick={() => handleDeactivateUser(u._id)} className="p-2 text-amber-500 hover:bg-amber-50 rounded-xl transition" title="تعطيل">
+                              <button onClick={() => handleDeactivateUser(u._id)} className="p-2 text-amber-500 hover:bg-amber-50 rounded-xl transition-all hover:shadow-sm" title="تعطيل">
                                 <FaUserSlash className="text-xs" />
                               </button>
                             ) : (
-                              <button onClick={() => handleActivateUser(u._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition" title="تفعيل">
+                              <button onClick={() => handleActivateUser(u._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition-all hover:shadow-sm" title="تفعيل">
                                 <FaUserPlus className="text-xs" />
                               </button>
                             )}
-                            <button onClick={() => handleDeleteUser(u._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition" title="حذف المستخدم">
+                            <button onClick={() => handleDeleteUser(u._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all hover:shadow-sm" title="حذف المستخدم">
                               <FaTrash className="text-xs" />
                             </button>
                           </>
@@ -591,7 +669,8 @@ export default function AdminDashboard() {
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-3 bg-slate-50/50 border-t border-slate-50 text-xs text-slate-400">
+                <div className="px-5 py-3 bg-gradient-to-l from-slate-50 to-transparent border-t border-slate-100 text-xs text-slate-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary-400" />
                   إجمالي: {filteredUsers.length} مستخدم
                 </div>
               </div>
@@ -601,43 +680,51 @@ export default function AdminDashboard() {
 
         {activeTab === 'tutors' && (
           <>
-            <div className="mb-4">
-              <SearchBar value={search} onChange={setSearch} placeholder="بحث عن مدرّس بالاسم أو المادة..." />
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg shadow-emerald-500/20"><FaChalkboardTeacher className="text-white text-sm" /></div>
+                <div>
+                  <h2 className="text-lg font-extrabold text-slate-900">المدرّسين</h2>
+                  <p className="text-xs text-slate-400">إدارة وتوثيق المدرّسين</p>
+                </div>
+              </div>
+              <SearchBar value={search} onChange={setSearch} placeholder="بحث بالاسم أو المادة..." />
             </div>
             {loading.tutors ? <Spinner /> : filteredTutors.length === 0 ? <Empty text="لا يوجد مدرّسين" /> : (
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="divide-y divide-slate-50">
+              <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div className="divide-y divide-slate-100">
                   {filteredTutors.map(t => (
-                    <div key={t._id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition gap-3">
+                    <div key={t._id} className="flex items-center justify-between px-5 py-4 hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent transition-all duration-150 gap-3">
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-bold shrink-0">{t.userData?.name?.charAt(0) || 'م'}</div>
+                        <div className="w-11 h-11 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-bold shrink-0 shadow-sm">{t.userData?.name?.charAt(0) || 'م'}</div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-slate-800 truncate">{t.userData?.name || 'مدرّس'}</p>
+                          <p className="font-bold text-slate-800 truncate">{t.userData?.name || 'مدرّس'}</p>
                           <p className="text-xs text-slate-400 truncate flex items-center gap-1.5 mt-0.5">
-                            <FaMapMarkerAlt className="text-[10px]" /> {t.area ? `${t.emirate} - ${t.area}` : t.emirate || 'غير محدد'}
+                            <FaMapMarkerAlt className="text-[10px] text-slate-400" /> {t.area ? `${t.emirate} - ${t.area}` : t.emirate || 'غير محدد'}
                             <span className="mx-1 text-slate-300">•</span>
                             <FaStar className="text-[10px] text-amber-400" /> {t.rating || 0}
                             <span className="mx-1 text-slate-300">•</span>
-                            {t.ratePerHour} درهم/س
+                            <span className="font-medium text-slate-600">{t.ratePerHour}</span> درهم/س
                           </p>
-                          {t.subjects && <p className="text-[11px] text-slate-400 mt-0.5">{t.subjects.join('، ')}</p>}
+                          {t.subjects && <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5">{t.subjects.map((s, i) => <span key={i} className="bg-slate-100 px-2 py-0.5 rounded-lg">{s}</span>)}</p>}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <Badge status={t.isVerified ? 'true' : 'false'} />
                         {!t.isVerified && (
-                          <button onClick={() => handleApproveTutor(t._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition" title="توثيق المدرّس">
+                          <button onClick={() => handleApproveTutor(t._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition-all hover:shadow-sm" title="توثيق المدرّس">
                             <FaCheckCircle />
                           </button>
                         )}
-                        <button onClick={() => handleDeleteTutor(t._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition" title="حذف المدرّس">
+                        <button onClick={() => handleDeleteTutor(t._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all hover:shadow-sm" title="حذف المدرّس">
                           <FaTrash className="text-xs" />
                         </button>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-3 bg-slate-50/50 border-t border-slate-50 text-xs text-slate-400">
+                <div className="px-5 py-3 bg-gradient-to-l from-slate-50 to-transparent border-t border-slate-100 text-xs text-slate-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                   إجمالي: {filteredTutors.length} مدرّس
                 </div>
               </div>
@@ -647,34 +734,40 @@ export default function AdminDashboard() {
 
         {activeTab === 'bookings' && (
           <>
-            <div className="mb-4">
-              <SearchBar value={search} onChange={setSearch} placeholder="بحث عن حجز بالمادة أو الطالب أو المدرّس..." />
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/20"><FaBookmark className="text-white text-sm" /></div>
+                <div>
+                  <h2 className="text-lg font-extrabold text-slate-900">الحجوزات</h2>
+                  <p className="text-xs text-slate-400">إدارة وتتبع جميع الحجوزات</p>
+                </div>
+              </div>
+              <SearchBar value={search} onChange={setSearch} placeholder="بحث بالمادة أو الطالب أو المدرّس..." />
             </div>
             {loading.bookings ? <Spinner /> : filteredBookings.length === 0 ? <Empty text="لا توجد حجوزات" /> : (
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="divide-y divide-slate-50">
+              <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div className="divide-y divide-slate-100">
                   {filteredBookings.map(b => (
-                    <div key={b._id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition gap-3">
+                    <div key={b._id} className="flex items-center justify-between px-5 py-4 hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent transition-all duration-150 gap-3">
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center text-sm font-bold shrink-0">
+                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary-50 to-violet-50 text-primary-600 flex items-center justify-center text-sm font-bold shrink-0 shadow-sm">
                           <FaBookmark />
                         </div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-slate-800 truncate">{b.subject}</p>
+                          <p className="font-bold text-slate-800 truncate">{b.subject}</p>
                           <p className="text-xs text-slate-400 truncate mt-0.5">
-                            {b.studentName || 'طالب'} <span className="mx-1 text-slate-300">←</span> {b.tutorName || 'مدرّس'}
+                            <span className="font-medium text-slate-600">{b.studentName || 'طالب'}</span> <span className="mx-1 text-slate-300">←</span> <span className="font-medium text-slate-600">{b.tutorName || 'مدرّس'}</span>
                           </p>
-                          <p className="text-xs text-slate-400 mt-0.5">
+                          <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-2">
                             <span className="inline-flex items-center gap-1"><FaCalendarAlt className="text-[10px]" /> {fmtDate(b.date) || fmtDate(b.createdAt)}</span>
-                            {b.totalAmount && <span className="mx-1.5 text-slate-300">•</span>}
-                            {b.totalAmount && <span>{b.totalAmount} درهم</span>}
+                            {b.totalAmount && <><span className="text-slate-300">•</span><span className="font-medium text-slate-600">{b.totalAmount} درهم</span></>}
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <Badge status={b.status} />
-                        {b.status !== 'cancelled' && b.status !== 'completed' && (
-                          <button onClick={() => handleCancelBooking(b._id)} className="p-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition" title="إلغاء الحجز">
+                        {b.status !== 'cancelled' && b.status !== 'completed' && !isSupport && (
+                          <button onClick={() => handleCancelBooking(b._id)} className="p-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all hover:shadow-sm" title="إلغاء الحجز">
                             <FaBan />
                           </button>
                         )}
@@ -682,7 +775,8 @@ export default function AdminDashboard() {
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-3 bg-slate-50/50 border-t border-slate-50 text-xs text-slate-400">
+                <div className="px-5 py-3 bg-gradient-to-l from-slate-50 to-transparent border-t border-slate-100 text-xs text-slate-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
                   إجمالي: {filteredBookings.length} حجز
                 </div>
               </div>
@@ -692,35 +786,42 @@ export default function AdminDashboard() {
 
         {activeTab === 'payments' && (
           <>
-            <div className="mb-4 flex items-center gap-3 flex-wrap">
-              <div className="flex-1 min-w-[200px]">
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20"><FaMoneyBillWave className="text-white text-sm" /></div>
+                <div>
+                  <h2 className="text-lg font-extrabold text-slate-900">المدفوعات</h2>
+                  <p className="text-xs text-slate-400">إدارة وتأكيد المدفوعات والتحويلات البنكية</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                {payments.filter(p => p.status === 'pending_transfer').length > 0 && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold shadow-sm">
+                    <FaUniversity /> {payments.filter(p => p.status === 'pending_transfer').length} تحويل
+                  </span>
+                )}
                 <SearchBar value={search} onChange={setSearch} placeholder="بحث عن دفعة..." />
               </div>
-              {payments.filter(p => p.status === 'pending_transfer').length > 0 && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold">
-                  <FaUniversity /> {payments.filter(p => p.status === 'pending_transfer').length} تحويل بانتظار التأكيد
-                </span>
-              )}
             </div>
             {loading.payments ? <Spinner /> : filteredPayments.length === 0 ? <Empty text="لا توجد مدفوعات" /> : (
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="divide-y divide-slate-50">
+              <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div className="divide-y divide-slate-100">
                   {filteredPayments.map(p => (
-                    <div key={p._id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition gap-3">
+                    <div key={p._id} className="flex items-center justify-between px-5 py-4 hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent transition-all duration-150 gap-3">
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${
                           p.method === 'bank_transfer' ? 'bg-blue-50 text-blue-600' : 'bg-emerald-50 text-emerald-600'
                         }`}>
                           {p.method === 'bank_transfer' ? <FaUniversity /> : <FaCreditCard />}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-slate-800 truncate">{p.subject || 'حجز'}</p>
+                          <p className="font-bold text-slate-800 truncate">{p.subject || 'حجز'}</p>
                           <p className="text-xs text-slate-400 truncate mt-0.5">
-                            {p.studentName || 'طالب'} <span className="mx-1 text-slate-300">←</span> {p.tutorName || 'مدرّس'}
+                            <span className="font-medium text-slate-600">{p.studentName || 'طالب'}</span> <span className="mx-1 text-slate-300">←</span> <span className="font-medium text-slate-600">{p.tutorName || 'مدرّس'}</span>
                           </p>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            <span className="font-semibold text-slate-600">{p.amount} درهم</span>
-                            <span className="mx-1.5 text-slate-300">•</span>
+                          <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-2">
+                            <span className="font-semibold text-lg text-slate-700">{p.amount}</span><span className="text-slate-400">درهم</span>
+                            <span className="text-slate-300">•</span>
                             <span className={p.method === 'bank_transfer' ? 'text-blue-500' : 'text-emerald-500'}>
                               {p.method === 'bank_transfer' ? 'تحويل بنكي' : 'بطاقة ائتمان'}
                             </span>
@@ -730,7 +831,7 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-2 shrink-0">
                         <Badge status={p.status} />
                         {p.status === 'pending_transfer' && (
-                          <button onClick={() => handleConfirmTransfer(p._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition" title="تأكيد استلام التحويل">
+                          <button onClick={() => handleConfirmTransfer(p._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition-all hover:shadow-sm" title="تأكيد استلام التحويل">
                             <FaCheckDouble />
                           </button>
                         )}
@@ -738,7 +839,8 @@ export default function AdminDashboard() {
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-3 bg-slate-50/50 border-t border-slate-50 text-xs text-slate-400">
+                <div className="px-5 py-3 bg-gradient-to-l from-slate-50 to-transparent border-t border-slate-100 text-xs text-slate-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
                   إجمالي: {filteredPayments.length} دفعة
                 </div>
               </div>
@@ -748,39 +850,46 @@ export default function AdminDashboard() {
 
         {activeTab === 'posts' && (
           <>
-            <div className="mb-4">
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/20"><FaNewspaper className="text-white text-sm" /></div>
+                <div>
+                  <h2 className="text-lg font-extrabold text-slate-900">المنشورات</h2>
+                  <p className="text-xs text-slate-400">الموافقة على منشورات الطلاب والمدرسين</p>
+                </div>
+              </div>
               <SearchBar value={search} onChange={setSearch} placeholder="بحث عن منشور..." />
             </div>
             {loading.posts ? <Spinner /> : filteredPosts.length === 0 ? <Empty text="لا توجد منشورات" /> : (
               <div className="space-y-3">
                 {filteredPosts.map(p => (
-                  <div key={p._id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between gap-3">
+                  <div key={p._id} className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 hover:shadow-md transition-all duration-200">
+                    <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3 min-w-0 flex-1">
-                        <div className="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary-50 to-rose-50 text-primary-600 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5 shadow-sm">
                           <FaNewspaper />
                         </div>
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 mb-1.5">
-                            <span className="font-semibold text-slate-800 text-sm">{p.userName || 'مستخدم'}</span>
-                            <span className="text-[11px] text-slate-400">{fmtDate(p.createdAt)}</span>
+                            <span className="font-bold text-slate-800 text-sm">{p.userName || 'مستخدم'}</span>
+                            <span className="text-[11px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">{fmtDate(p.createdAt)}</span>
                           </div>
-                          <p className="text-sm text-slate-600 leading-relaxed mb-2 line-clamp-2">{p.content}</p>
-                          <div className="flex items-center gap-3 text-xs text-slate-400">
-                            <span className="flex items-center gap-1"><FaThumbsUp className="text-[10px]" /> {p.likes?.length || 0}</span>
-                            <span className="flex items-center gap-1"><FaNewspaper className="text-[10px]" /> {p.comments?.length || 0} تعليق</span>
-                            {p.media?.length > 0 && <span className="text-primary-400">📎 {p.media.length} مرفق</span>}
+                          <p className="text-sm text-slate-600 leading-relaxed mb-3 line-clamp-2">{p.content}</p>
+                          <div className="flex items-center gap-4 text-xs text-slate-400">
+                            <span className="flex items-center gap-1.5"><FaThumbsUp className="text-slate-400" /> {p.likes?.length || 0}</span>
+                            <span className="flex items-center gap-1.5"><FaCommentDots className="text-slate-400" /> {p.comments?.length || 0} تعليق</span>
+                            {p.media?.length > 0 && <span className="text-primary-500 flex items-center gap-1">📎 {p.media.length} مرفق</span>}
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <Badge status={p.approved ? 'true' : 'false'} />
                         {!p.approved && (
-                          <button onClick={() => handleApprovePost(p._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition" title="الموافقة على المنشور">
+                          <button onClick={() => handleApprovePost(p._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition-all hover:shadow-sm" title="الموافقة على المنشور">
                             <FaCheckCircle />
                           </button>
                         )}
-                        <button onClick={() => handleDeletePost(p._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition" title="حذف المنشور">
+                        <button onClick={() => handleDeletePost(p._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all hover:shadow-sm" title="حذف المنشور">
                           <FaTrash className="text-xs" />
                         </button>
                       </div>
@@ -794,44 +903,52 @@ export default function AdminDashboard() {
 
         {activeTab === 'reviews' && (
           <>
-            <div className="mb-4">
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-500/20"><FaStar className="text-white text-sm" /></div>
+                <div>
+                  <h2 className="text-lg font-extrabold text-slate-900">التقييمات</h2>
+                  <p className="text-xs text-slate-400">الموافقة على تقييمات المدرسين</p>
+                </div>
+              </div>
               <SearchBar value={search} onChange={setSearch} placeholder="بحث عن تقييم..." />
             </div>
             {loading.reviews ? <Spinner /> : filteredReviews.length === 0 ? <Empty text="لا توجد تقييمات" /> : (
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="divide-y divide-slate-50">
+              <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div className="divide-y divide-slate-100">
                   {filteredReviews.map(r => (
-                    <div key={r._id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition gap-3">
+                    <div key={r._id} className="flex items-center justify-between px-5 py-4 hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent transition-all duration-150 gap-3">
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                        <div className="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 shadow-sm">
                           <FaStar />
                         </div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-slate-800 truncate flex items-center gap-2">
+                          <p className="font-bold text-slate-800 truncate flex items-center gap-2">
                             {r.tutorName || 'مدرّس'}
-                            <span className="text-[11px] text-amber-500 flex items-center gap-0.5">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-50 text-amber-600 text-[10px] font-bold">
                               <FaStar className="text-[10px]" /> {r.rating}
                             </span>
                           </p>
                           <p className="text-xs text-slate-400 truncate">{r.studentName || 'طالب'}</p>
-                          {r.comment && <p className="text-xs text-slate-500 mt-1 line-clamp-1">{r.comment}</p>}
+                          {r.comment && <p className="text-xs text-slate-500 mt-1 line-clamp-1 italic">"{r.comment}"</p>}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <Badge status={r.approved ? 'true' : 'false'} />
                         {!r.approved && (
-                          <button onClick={() => handleApproveReview(r._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition" title="الموافقة">
+                          <button onClick={() => handleApproveReview(r._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition-all hover:shadow-sm" title="الموافقة">
                             <FaCheckCircle />
                           </button>
                         )}
-                        <button onClick={() => handleDeleteReview(r._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition" title="حذف">
+                        <button onClick={() => handleDeleteReview(r._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all hover:shadow-sm" title="حذف">
                           <FaTrash className="text-xs" />
                         </button>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-3 bg-slate-50/50 border-t border-slate-50 text-xs text-slate-400">
+                <div className="px-5 py-3 bg-gradient-to-l from-slate-50 to-transparent border-t border-slate-100 text-xs text-slate-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
                   إجمالي: {filteredReviews.length} تقييم
                 </div>
               </div>
@@ -841,42 +958,50 @@ export default function AdminDashboard() {
 
         {activeTab === 'institutes' && (
           <>
-            <div className="mb-4">
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center shadow-lg shadow-purple-500/20"><FaBuilding className="text-white text-sm" /></div>
+                <div>
+                  <h2 className="text-lg font-extrabold text-slate-900">المعاهد</h2>
+                  <p className="text-xs text-slate-400">إدارة وتوثيق المعاهد التعليمية</p>
+                </div>
+              </div>
               <SearchBar value={search} onChange={setSearch} placeholder="بحث عن معهد..." />
             </div>
             {loading.institutes ? <Spinner /> : filteredInstitutes.length === 0 ? <Empty text="لا توجد معاهد" /> : (
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="divide-y divide-slate-50">
+              <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div className="divide-y divide-slate-100">
                   {filteredInstitutes.map(i => (
-                    <div key={i._id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition gap-3">
+                    <div key={i._id} className="flex items-center justify-between px-5 py-4 hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent transition-all duration-150 gap-3">
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 text-lg">
+                        <div className="w-11 h-11 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 shadow-sm text-lg">
                           {i.logo || <FaBuilding />}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-slate-800 truncate">{i.name}</p>
-                          <p className="text-xs text-slate-400 truncate">
-                            {i.emirates?.join('، ')}
-                            {i.rating && <><span className="mx-1.5 text-slate-300">•</span> تقييم {i.rating}</>}
+                          <p className="font-bold text-slate-800 truncate">{i.name}</p>
+                          <p className="text-xs text-slate-400 truncate flex items-center gap-1.5 mt-0.5">
+                            <span className="inline-flex items-center gap-1"><FaMapMarkerAlt className="text-[10px]" /> {i.emirates?.join('، ')}</span>
+                            {i.rating && <><span className="text-slate-300">•</span> <FaStar className="text-[10px] text-amber-400" /> {i.rating}</>}
                           </p>
-                          {i.subjects && <p className="text-[11px] text-slate-400 mt-0.5">{i.subjects.join('، ')}</p>}
+                          {i.subjects && <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5">{i.subjects.map((s, j) => <span key={j} className="bg-slate-100 px-2 py-0.5 rounded-lg">{s}</span>)}</p>}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <Badge status={i.approved ? 'true' : 'false'} />
                         {!i.approved && (
-                          <button onClick={() => handleApproveInstitute(i._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition" title="الموافقة">
+                          <button onClick={() => handleApproveInstitute(i._id)} className="p-2 text-emerald-500 hover:bg-emerald-50 rounded-xl transition-all hover:shadow-sm" title="الموافقة">
                             <FaCheckCircle />
                           </button>
                         )}
-                        <button onClick={() => handleDeleteInstitute(i._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition" title="حذف">
+                        <button onClick={() => handleDeleteInstitute(i._id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all hover:shadow-sm" title="حذف">
                           <FaTrash className="text-xs" />
                         </button>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-3 bg-slate-50/50 border-t border-slate-50 text-xs text-slate-400">
+                <div className="px-5 py-3 bg-gradient-to-l from-slate-50 to-transparent border-t border-slate-100 text-xs text-slate-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
                   إجمالي: {filteredInstitutes.length} معهد
                 </div>
               </div>
@@ -886,12 +1011,19 @@ export default function AdminDashboard() {
 
         {activeTab === 'charts' && (
           <>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-500/20"><FaChartLine className="text-white text-sm" /></div>
+              <div>
+                <h2 className="text-lg font-extrabold text-slate-900">الرسوم البيانية</h2>
+                <p className="text-xs text-slate-400">تحليلات وإحصائيات المنصة</p>
+              </div>
+            </div>
             {!chartData ? <Spinner /> : (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Revenue line chart */}
-                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><FaChartLine className="text-primary-500" />الإيرادات الشهرية</h3>
+                  <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
+                    <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-indigo-500" />الإيرادات الشهرية</h3>
                     <ResponsiveContainer width="100%" height={250}>
                       <LineChart data={Object.entries(chartData.monthlyRevenue).map(([k, v]) => ({ month: k, revenue: v }))}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -903,8 +1035,8 @@ export default function AdminDashboard() {
                     </ResponsiveContainer>
                   </div>
                   {/* Bookings by subject bar chart */}
-                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><FaBookmark className="text-amber-500" />الحجوزات حسب المادة</h3>
+                  <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
+                    <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-amber-500" />الحجوزات حسب المادة</h3>
                     <ResponsiveContainer width="100%" height={250}>
                       <BarChart data={Object.entries(chartData.bookingsBySubject).map(([k, v]) => ({ subject: k, count: v }))}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -918,8 +1050,8 @@ export default function AdminDashboard() {
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Booking status pie */}
-                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><FaChartLine className="text-emerald-500" />حالة الحجوزات</h3>
+                  <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
+                    <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500" />حالة الحجوزات</h3>
                     <ResponsiveContainer width="100%" height={250}>
                       <PieChart>
                         <Pie data={Object.entries(chartData.statusCounts).filter(([, v]) => v > 0).map(([k, v]) => ({ name: k, value: v }))} cx="50%" cy="50%" innerRadius={60} outerRadius={100} dataKey="value" label={({ name }) => ({ pending: 'قيد الانتظار', confirmed: 'مؤكد', completed: 'مكتمل', cancelled: 'ملغي' })[name] || name}>
@@ -930,8 +1062,8 @@ export default function AdminDashboard() {
                     </ResponsiveContainer>
                   </div>
                   {/* Bookings by emirate */}
-                  <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><FaMapMarkerAlt className="text-purple-500" />الحجوزات حسب الإمارة</h3>
+                  <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
+                    <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-purple-500" />الحجوزات حسب الإمارة</h3>
                     <ResponsiveContainer width="100%" height={250}>
                       <BarChart data={Object.entries(chartData.bookingsByEmirate).map(([k, v]) => ({ emirate: k, count: v }))} layout="vertical">
                         <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -1071,7 +1203,7 @@ export default function AdminDashboard() {
                         <div className="flex items-center gap-2 shrink-0">
                           {!m.read && <span className="w-2 h-2 rounded-full bg-primary-500" title="جديد" />}
                           <button onClick={() => handleMarkContactRead(m._id)} className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition" title="تحديد كمقروء"><FaCheckDouble className="text-xs" /></button>
-                          <button onClick={() => handleDeleteContactMessage(m._id)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"><FaTrash className="text-xs" /></button>
+                          {!isSupport && <button onClick={() => handleDeleteContactMessage(m._id)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"><FaTrash className="text-xs" /></button>}
                         </div>
                       </div>
                       {m.subject && <p className="text-xs font-bold text-slate-600 mb-1">{m.subject}</p>}
@@ -1169,17 +1301,25 @@ export default function AdminDashboard() {
                   { type: 'tutors', label: 'المدرسين', icon: FaChalkboardTeacher, color: 'green' },
                   { type: 'bookings', label: 'الحجوزات', icon: FaBookmark, color: 'amber' },
                   { type: 'payments', label: 'المدفوعات', icon: FaMoneyBillWave, color: 'purple' },
-                ].map(o => (
-                  <button key={o.type} onClick={() => handleExport(o.type)}
-                    className={`flex items-center gap-4 p-5 rounded-xl border border-slate-100 hover:border-${o.color}-200 hover:bg-${o.color}-50/30 transition bg-white text-start`}>
-                    <div className={`w-12 h-12 rounded-xl bg-${o.color}-50 text-${o.color}-600 flex items-center justify-center`}><o.icon className="text-lg" /></div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-slate-800">{o.label}</p>
-                      <p className="text-xs text-slate-400">CSV</p>
-                    </div>
-                    <FaFileExport className="text-slate-300 text-lg" />
-                  </button>
-                ))}
+                ].map(o => {
+                  const cls = {
+                    blue: { btn: 'hover:border-blue-200 hover:bg-blue-50/30', icon: 'bg-blue-50 text-blue-600' },
+                    green: { btn: 'hover:border-emerald-200 hover:bg-emerald-50/30', icon: 'bg-emerald-50 text-emerald-600' },
+                    amber: { btn: 'hover:border-amber-200 hover:bg-amber-50/30', icon: 'bg-amber-50 text-amber-600' },
+                    purple: { btn: 'hover:border-purple-200 hover:bg-purple-50/30', icon: 'bg-purple-50 text-purple-600' },
+                  }[o.color] || { btn: '', icon: '' };
+                  return (
+                    <button key={o.type} onClick={() => handleExport(o.type)}
+                      className={`flex items-center gap-4 p-5 rounded-xl border border-slate-100 transition bg-white text-start ${cls.btn}`}>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${cls.icon}`}><o.icon className="text-lg" /></div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-slate-800">{o.label}</p>
+                        <p className="text-xs text-slate-400">CSV</p>
+                      </div>
+                      <FaFileExport className="text-slate-300 text-lg" />
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>

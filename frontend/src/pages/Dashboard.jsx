@@ -31,7 +31,7 @@ export default function Dashboard() {
     completed: { color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-500/10', border: 'border-blue-200 dark:border-blue-800', dot: 'bg-blue-400', bar: 'bg-blue-400', label: t('dashboard.completed'), icon: FaCheckCircle },
     cancelled: { color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-500/10', border: 'border-red-200 dark:border-red-800', dot: 'bg-red-400', bar: 'bg-red-400', label: t('dashboard.cancelled'), icon: FaTimesCircle },
   };
-  if (user?.role === 'admin') return <Navigate to="/admin" />;
+  if (user?.role === 'admin' || user?.role === 'support') return <Navigate to="/admin" />;
   const [bookings, setBookings] = useState([]);
   const [tutorProfile, setTutorProfile] = useState(null);
   const [notifications, setNotifications] = useState([]);

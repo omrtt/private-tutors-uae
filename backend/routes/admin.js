@@ -2,7 +2,7 @@
 const { protect, authorize } = require('../middleware/auth');
 const { validate, updateSettingsSchema } = require('../middleware/validate');
 const {
-  getDashboard, getUsers, deleteUser,
+  getDashboard, getUsers, deleteUser, createUser,
   getTutors, approveTutor, deleteTutor,
   getBookings, cancelBooking,
   getPayments, confirmBankTransfer,
@@ -21,15 +21,23 @@ const {
   exportData,
 } = require('../controllers/adminController');
 
-router.use(protect, authorize('admin'));
+router.use(protect);
 
-router.get('/dashboard', getDashboard);
-router.get('/users', getUsers);
+// Shared routes: accessible by admin AND support
+router.get('/dashboard', authorize('admin', 'support'), getDashboard);
+router.get('/users', authorize('admin', 'support'), getUsers);
+router.get('/bookings', authorize('admin', 'support'), getBookings);
+router.get('/contact-messages', authorize('admin', 'support'), getContactMessages);
+router.put('/contact-messages/:id/read', authorize('admin', 'support'), markContactRead);
+
+// Admin-only routes
+router.use(authorize('admin'));
+
+router.post('/users', createUser);
 router.delete('/users/:id', deleteUser);
 router.get('/tutors', getTutors);
 router.put('/tutors/:id/approve', approveTutor);
 router.delete('/tutors/:id', deleteTutor);
-router.get('/bookings', getBookings);
 router.put('/bookings/:id/cancel', cancelBooking);
 router.get('/payments', getPayments);
 router.put('/payments/:id/confirm-transfer', confirmBankTransfer);
@@ -46,16 +54,12 @@ router.put('/posts/:id/approve', approvePost);
 router.delete('/posts/:id', deletePost);
 router.get('/settings', getSettings);
 router.put('/settings', validate(updateSettingsSchema), updateSettings);
-
-// New routes
 router.get('/audit-logs', getAuditLogs);
 router.delete('/audit-logs', deleteAuditLogs);
 router.get('/coupons', getCoupons);
 router.post('/coupons', createCoupon);
 router.put('/coupons/:id', updateCoupon);
 router.delete('/coupons/:id', deleteCoupon);
-router.get('/contact-messages', getContactMessages);
-router.put('/contact-messages/:id/read', markContactRead);
 router.delete('/contact-messages/:id', deleteContactMessage);
 router.get('/content-pages', getContentPages);
 router.post('/content-pages', createContentPage);

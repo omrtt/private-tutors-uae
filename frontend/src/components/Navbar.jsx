@@ -179,7 +179,7 @@ export default function Navbar() {
                             <div className="min-w-0">
                               <p className="text-sm font-bold text-slate-900 dark:text-white truncate flex items-center gap-1.5">
                                 {user.name}
-                                {(user.role === 'admin' || user.role === 'tutor') && (
+                                {(user.role === 'admin' || user.role === 'tutor' || user.role === 'support') && (
                                   <FaCrown className="text-primary-500 text-[10px]" />
                                 )}
                               </p>
@@ -198,12 +198,12 @@ export default function Navbar() {
                             <FaComment className="text-xs w-4" /> {t('nav.chat')}
                           </Link>
                           <div className="divider my-1" />
-                          {user.role === 'admin' && (
+                          {(user.role === 'admin' || user.role === 'support') && (
                             <Link to="/admin" className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-secondary-600 dark:text-secondary-400 hover:bg-secondary-50 dark:hover:bg-secondary-500/10 transition-all">
-                              <FaCrown className="text-xs w-4" /> {t('nav.adminPanel')}
+                              <FaCrown className="text-xs w-4" /> {user.role === 'support' ? 'لوحة الدعم' : t('nav.adminPanel')}
                             </Link>
                           )}
-                          {user.role !== 'tutor' && user.role !== 'admin' && (
+                  {user.role !== 'tutor' && user.role !== 'admin' && user.role !== 'support' && (
                             <Link to="/become-tutor" className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-500/10 transition-all">
                               <FaPlusCircle className="text-xs w-4" /> {t('nav.becomeTutor')}
                             </Link>
@@ -316,7 +316,7 @@ export default function Navbar() {
                   <Link to="/chat" className="flex items-center gap-3.5 py-3 px-4 rounded-2xl text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-500/10 transition-all text-sm font-medium">
                     <FaComment className="text-sm" /> {t('nav.chat')}
                   </Link>
-                  {user.role !== 'tutor' && user.role !== 'admin' && (
+                  {user.role !== 'tutor' && user.role !== 'admin' && user.role !== 'support' && (
                     <Link to="/become-tutor" className="flex items-center gap-3.5 py-3 px-4 rounded-2xl bg-gradient-to-r from-primary-50 to-emerald-50 dark:from-primary-500/15 dark:to-emerald-500/10 text-primary-600 dark:text-primary-400 transition-all text-sm font-bold">
                       <FaPlusCircle /> {t('nav.becomeTutor')}
                     </Link>

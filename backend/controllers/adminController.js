@@ -61,6 +61,23 @@ exports.deleteUser = async (req, res) => {
   } catch (err) { res.status(500).json({ message: "Internal server error" }); }
 };
 
+exports.createUser = async (req, res) => {
+  try {
+    const { name, phone, password, role } = req.body;
+    if (!name || !phone || !password) {
+      return res.status(400).json({ message: 'الاسم ورقم الهاتف وكلمة السر مطلوبة' });
+    }
+    const fullPhone = `+971${phone.replace(/^0+/, '')}`;
+    const exists = await User.findOne({ phone: fullPhone });
+    if (exists) return res.status(400).json({ message: 'رقم الهاتف مسجل مسبقاً' });
+    const user = await User.create({ name, phone: fullPhone, password, role: role || 'student', isActive: true });
+    const { password: _, ...userData } = user;
+    res.status(201).json({ user: User.toJSON(user), message: 'تم إنشاء المستخدم بنجاح' });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 exports.getTutors = async (req, res) => {
   try {
     let tutors = await Tutor.find({});
