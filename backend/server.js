@@ -64,6 +64,11 @@ app.get('/api/settings/public', async (req, res) => {
 });
 
 app.get('/api', (req, res) => res.json({ message: 'UAE Private Tutors API' }));
+app.get('/api/debug', async (req, res) => {
+  const User = require('./models/User');
+  const user = await User.findOne({});
+  res.json({ sample: user ? User.toJSON(user) : null });
+});
 
 // Serve frontend in production
 const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');
