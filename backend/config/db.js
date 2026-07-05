@@ -32,7 +32,7 @@ async function seedFromJsonFiles() {
     if (docs.length === 0) continue;
 
     // Convert _id to ObjectId only for collections that expect ObjectId IDs
-    const collectionsWithStringId = ['bookings', 'payments', 'reviews', 'schedules'];
+    const collectionsWithStringId = ['bookings', 'payments', 'reviews', 'schedules', 'users'];
     const prepared = docs.map((doc) => {
       const d = { ...doc };
       if (!collectionsWithStringId.includes(name) && d._id && typeof d._id === 'string' && /^[a-f0-9]{24}$/i.test(d._id)) {
