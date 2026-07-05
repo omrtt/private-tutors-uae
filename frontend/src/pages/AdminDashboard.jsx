@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
   FaUsers, FaChalkboardTeacher, FaBookmark, FaMoneyBillWave,
@@ -37,6 +38,21 @@ function Empty({ text, icon: Icon }) {
         {Icon ? <Icon className="text-2xl text-slate-400" /> : <FaExclamationTriangle className="text-2xl text-slate-400" />}
       </div>
       <p className="text-sm text-slate-400">{text || 'لا توجد نتائج'}</p>
+    </div>
+  );
+}
+
+function StatCardSkeleton() {
+  return (
+    <div className="rounded-2xl bg-white border border-slate-100 p-5 shadow-sm animate-pulse">
+      <div className="flex items-start justify-between">
+        <div className="flex-1 min-w-0 space-y-3">
+          <div className="h-3 bg-slate-200 rounded w-20" />
+          <div className="h-7 bg-slate-200 rounded w-28" />
+          <div className="h-3 bg-slate-200 rounded w-16" />
+        </div>
+        <div className="w-10 h-10 rounded-xl bg-slate-200" />
+      </div>
     </div>
   );
 }
@@ -179,6 +195,8 @@ export default function AdminDashboard() {
   const [feePercentInput, setFeePercentInput] = useState(15);
   const [savingSettings, setSavingSettings] = useState(false);
   const [search, setSearch] = useState('');
+  const [filterRole, setFilterRole] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('all');
   const [loading, setLoading] = useState({});
   const [chartData, setChartData] = useState(null);
   const [coupons, setCoupons] = useState([]);
@@ -238,12 +256,30 @@ export default function AdminDashboard() {
       setLoad('settings');
       axios.get('/api/admin/settings').then(r => { setSettings(r.data); setFeePercentInput(r.data.platformFeePercent || 15); }).catch(() => {}).finally(() => clearLoad('settings'));
     }
-    if (activeTab === 'charts') axios.get('/api/admin/chart-data').then(r => setChartData(r.data)).catch(() => {});
-    if (activeTab === 'coupons') axios.get('/api/admin/coupons').then(r => setCoupons(r.data)).catch(() => {});
-    if (activeTab === 'earnings') axios.get('/api/admin/tutor-earnings').then(r => setEarnings(r.data)).catch(() => {});
-    if (activeTab === 'contact') axios.get('/api/admin/contact-messages').then(r => setContactMessages(r.data)).catch(() => {});
-    if (activeTab === 'content') axios.get('/api/admin/content-pages').then(r => setContentPages(r.data)).catch(() => {});
-    if (activeTab === 'audit') axios.get('/api/admin/audit-logs').then(r => setAuditLogs(r.data)).catch(() => {});
+    if (activeTab === 'charts') {
+      setLoad('charts');
+      axios.get('/api/admin/chart-data').then(r => setChartData(r.data)).catch(() => {}).finally(() => clearLoad('charts'));
+    }
+    if (activeTab === 'coupons') {
+      setLoad('coupons');
+      axios.get('/api/admin/coupons').then(r => setCoupons(r.data)).catch(() => {}).finally(() => clearLoad('coupons'));
+    }
+    if (activeTab === 'earnings') {
+      setLoad('earnings');
+      axios.get('/api/admin/tutor-earnings').then(r => setEarnings(r.data)).catch(() => {}).finally(() => clearLoad('earnings'));
+    }
+    if (activeTab === 'contact') {
+      setLoad('contact');
+      axios.get('/api/admin/contact-messages').then(r => setContactMessages(r.data)).catch(() => {}).finally(() => clearLoad('contact'));
+    }
+    if (activeTab === 'content') {
+      setLoad('content');
+      axios.get('/api/admin/content-pages').then(r => setContentPages(r.data)).catch(() => {}).finally(() => clearLoad('content'));
+    }
+    if (activeTab === 'audit') {
+      setLoad('audit');
+      axios.get('/api/admin/audit-logs').then(r => setAuditLogs(r.data)).catch(() => {}).finally(() => clearLoad('audit'));
+    }
   }, [activeTab]);
 
   const handleSaveSettings = async () => {
@@ -465,13 +501,19 @@ export default function AdminDashboard() {
   };
 
   const searchLower = search.toLowerCase();
-  const filteredUsers = users.filter(u => (u.name || '').toLowerCase().includes(searchLower) || (u.email || '').toLowerCase().includes(searchLower));
+  const filteredUsers = users.filter(u => {
+    const matchesSearch = (u.name || '').toLowerCase().includes(searchLower) || (u.email || '').toLowerCase().includes(searchLower);
+    const matchesRole = filterRole === 'all' || u.role === filterRole;
+    return matchesSearch && matchesRole;
+  });
   const filteredTutors = tutors.filter(t => {
     const name = (t.userData && t.userData.name) || '';
     return name.toLowerCase().includes(searchLower) || t.subjects?.some(s => s.includes(search));
   });
   const filteredBookings = bookings.filter(b => {
-    return (b.subject || '').includes(search) || (b.studentName || '').includes(search) || (b.tutorName || '').includes(search);
+    const matchesSearch = (b.subject || '').includes(search) || (b.studentName || '').includes(search) || (b.tutorName || '').includes(search);
+    const matchesStatus = filterStatus === 'all' || b.status === filterStatus;
+    return matchesSearch && matchesStatus;
   });
   const filteredPayments = payments.filter(p => {
     return (p.studentName || '').includes(search) || (p.tutorName || '').includes(search) || (p.method || '').includes(search) || (p.status || '').includes(search);
@@ -532,9 +574,23 @@ export default function AdminDashboard() {
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-6xl mx-auto px-6 py-8">
+          <AnimatePresence mode="wait">
+            <motion.div key={activeTab} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.2 }}>
 
         {activeTab === 'dashboard' && (
-          loading.dashboard ? <Spinner /> : !stats ? <Empty text="لا توجد بيانات" /> : (
+          loading.dashboard ? (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <StatCardSkeleton /><StatCardSkeleton /><StatCardSkeleton /><StatCardSkeleton />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <StatCardSkeleton /><StatCardSkeleton /><StatCardSkeleton /><StatCardSkeleton />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <StatCardSkeleton /><StatCardSkeleton /><StatCardSkeleton />
+              </div>
+            </div>
+          ) : !stats ? <Empty text="لا توجد بيانات" /> : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <StatCard icon={FaUsers} label="الطلاب" value={stats.totalUsers} sub="إجمالي المستخدمين" color="blue" onClick={() => setActiveTab('users')} />
@@ -598,8 +654,15 @@ export default function AdminDashboard() {
                   <p className="text-xs text-slate-400">إدارة جميع المستخدمين في المنصة</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <SearchBar value={search} onChange={setSearch} placeholder="بحث بالاسم أو البريد..." />
+                <select className="h-10 px-3 rounded-xl text-xs font-bold border-2 border-slate-100 bg-white text-slate-600 outline-none focus:border-primary-300 transition cursor-pointer" value={filterRole} onChange={e => setFilterRole(e.target.value)}>
+                  <option value="all">كل الأدوار</option>
+                  <option value="student">طالب</option>
+                  <option value="tutor">مدرّس</option>
+                  <option value="admin">مشرف</option>
+                  <option value="support">دعم</option>
+                </select>
                 {!isSupport && <button onClick={() => setShowCreateUser(!showCreateUser)} className={`h-10 px-4 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${showCreateUser ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-primary-500 text-white hover:bg-primary-600 shadow-lg shadow-primary-500/20'}`}>
                   {showCreateUser ? <FaTimesCircle /> : <FaUserPlus />} {showCreateUser ? 'إلغاء' : 'إضافة مستخدم'}
                 </button>}
@@ -742,7 +805,16 @@ export default function AdminDashboard() {
                   <p className="text-xs text-slate-400">إدارة وتتبع جميع الحجوزات</p>
                 </div>
               </div>
-              <SearchBar value={search} onChange={setSearch} placeholder="بحث بالمادة أو الطالب أو المدرّس..." />
+              <div className="flex flex-wrap items-center gap-3">
+                <SearchBar value={search} onChange={setSearch} placeholder="بحث بالمادة أو الطالب أو المدرّس..." />
+                <select className="h-10 px-3 rounded-xl text-xs font-bold border-2 border-slate-100 bg-white text-slate-600 outline-none focus:border-primary-300 transition cursor-pointer" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
+                  <option value="all">كل الحالات</option>
+                  <option value="pending">قيد الانتظار</option>
+                  <option value="confirmed">مؤكد</option>
+                  <option value="completed">مكتمل</option>
+                  <option value="cancelled">ملغي</option>
+                </select>
+              </div>
             </div>
             {loading.bookings ? <Spinner /> : filteredBookings.length === 0 ? <Empty text="لا توجد حجوزات" /> : (
               <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
@@ -1082,6 +1154,8 @@ export default function AdminDashboard() {
 
         {activeTab === 'coupons' && (
           <>
+            {loading.coupons ? <Spinner /> : (
+              <>
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-6">
               <h3 className="text-sm font-bold text-slate-700 mb-4">إنشاء كود خصم جديد</h3>
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
@@ -1093,7 +1167,7 @@ export default function AdminDashboard() {
             </div>
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
               <div className="divide-y divide-slate-50">
-                {coupons.map(c => (
+                {coupons.length === 0 ? <Empty text="لا توجد كوبونات" /> : coupons.map(c => (
                   <div key={c._id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition gap-3">
                     <div className="flex items-center gap-3 min-w-0 flex-1">
                       <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0"><FaTags /></div>
@@ -1118,6 +1192,7 @@ export default function AdminDashboard() {
                 ))}
               </div>
             </div>
+            </>)}
           </>
         )}
 
@@ -1219,6 +1294,8 @@ export default function AdminDashboard() {
 
         {activeTab === 'content' && (
           <>
+            {loading.content ? <Spinner /> : (
+              <>
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 mb-6">
               <h3 className="text-sm font-bold text-slate-700 mb-4">إضافة صفحة جديدة</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
@@ -1235,7 +1312,7 @@ export default function AdminDashboard() {
             </div>
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
               <div className="divide-y divide-slate-50">
-                {contentPages.map(p => (
+                {contentPages.length === 0 ? <Empty text="لا توجد صفحات" /> : contentPages.map(p => (
                   <div key={p._id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition gap-3">
                     <div className="flex items-center gap-3 min-w-0 flex-1">
                       <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center shrink-0"><FaFileAlt /></div>
@@ -1260,6 +1337,7 @@ export default function AdminDashboard() {
                 ))}
               </div>
             </div>
+            </>)}
           </>
         )}
 
@@ -1395,6 +1473,8 @@ export default function AdminDashboard() {
             )}
           </>
           )}
+          </motion.div>
+          </AnimatePresence>
         </div>
       </main>
     </div>
