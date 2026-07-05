@@ -65,9 +65,12 @@ app.get('/api/settings/public', async (req, res) => {
 
 app.get('/api', (req, res) => res.json({ message: 'UAE Private Tutors API' }));
 app.get('/api/debug', async (req, res) => {
+  const bcrypt = require('bcryptjs');
   const User = require('./models/User');
-  const user = await User.findOne({});
-  res.json({ sample: user ? User.toJSON(user) : null });
+  const user = await User.findOne({ phone: '+971509999999' });
+  if (!user) return res.json({ error: 'user not found' });
+  const match = await bcrypt.compare('123456', user.password);
+  res.json({ found: true, name: user.name, match, phone: user.phone });
 });
 
 // Serve frontend in production
