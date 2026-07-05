@@ -19,7 +19,13 @@ async function seedFromJsonFiles() {
     if (!existsSync(filePath)) continue;
 
     const count = await mongoose.connection.db.collection(name).countDocuments();
-    if (count > 0) continue;
+    if (count > 0) {
+      if (name === 'users') {
+        await mongoose.connection.db.collection(name).deleteMany({});
+      } else {
+        continue;
+      }
+    }
 
     const raw = readFileSync(filePath, 'utf8');
     const docs = JSON.parse(raw);
