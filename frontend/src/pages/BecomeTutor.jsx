@@ -1,12 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import { FaChalkboardTeacher, FaUserGraduate, FaBookOpen, FaMoneyBillWave, FaMapMarkerAlt, FaGlobe, FaAward, FaLanguage, FaGraduationCap, FaStar, FaCity } from 'react-icons/fa';
+import {
+  FaChalkboardTeacher, FaUserGraduate, FaBookOpen, FaMoneyBillWave,
+  FaMapMarkerAlt, FaGlobe, FaAward, FaLanguage, FaGraduationCap,
+  FaStar, FaCity, FaCamera, FaUser
+} from 'react-icons/fa';
 import SEO from '../components/SEO';
+import Avatar from '../components/Avatar';
 import { EMIRATES, getAreas } from '../data/locations';
 
 export default function BecomeTutor() {
@@ -14,11 +19,15 @@ export default function BecomeTutor() {
   const { user } = useAuth();
   const emirates = EMIRATES;
   const navigate = useNavigate();
+  const fileRef = useRef(null);
   const [editing, setEditing] = useState(false);
+  const [photo, setPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     bio: '', subjects: '', qualifications: '', experience: 0, ratePerHour: '',
-    emirate: 'دبي', area: '', teachingMode: 'both', languages: '', education: '', isAvailable: true,
-    trialAvailable: false, trialPrice: '',
+    emirate: 'دبي', area: '', teachingMode: 'both', languages: '', education: '',
+    isAvailable: true, trialAvailable: false, trialPrice: '',
   });
 
   useEffect(() => {
@@ -28,13 +37,42 @@ export default function BecomeTutor() {
         setForm({
           bio: t.bio || '', subjects: t.subjects?.join('، ') || '', qualifications: t.qualifications?.join('، ') || '',
           experience: t.experience || 0, ratePerHour: t.ratePerHour || '', emirate: t.emirate || 'دبي',
-          area: t.area || '', teachingMode: t.teachingMode || 'both', languages: t.languages?.join('، ') || '', education: t.education || '', isAvailable: t.isAvailable,
+          area: t.area || '', teachingMode: t.teachingMode || 'both', languages: t.languages?.join('، ') || '',
+          education: t.education || '', isAvailable: t.isAvailable,
           trialAvailable: t.trialAvailable || false, trialPrice: t.trialPrice || '',
         });
+        if (t.photo) setPhotoPreview(t.photo);
         setEditing(true);
       }).catch(() => {});
     }
   }, [user]);
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return toast.error('يرجى اختيار صورة صالحة');
+    if (file.size > 5 * 1024 * 1024) return toast.error('حجم الصورة يجب أن لا يتجاوز 5MB');
+    setPhoto(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
+
+  const uploadPhoto = async () => {
+    if (!photo) return;
+    setUploading(true);
+    const fd = new FormData();
+    fd.append('photo', photo);
+    try {
+      const res = await axios.post('/api/upload', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return res.data.url;
+    } catch (err) {
+      toast.error('فشل رفع الصورة');
+      return null;
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,6 +93,10 @@ export default function BecomeTutor() {
       } else {
         await axios.post('/api/tutors/profile', data);
         toast.success('تم إنشاء الملف الشخصي!');
+      }
+      if (photo) {
+        const url = await uploadPhoto();
+        if (!url) return;
       }
       navigate('/dashboard');
     } catch (err) {
@@ -77,6 +119,22 @@ export default function BecomeTutor() {
 
       <div className="card p-6 md:p-8">
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Photo Upload */}
+          <div className="flex flex-col items-center mb-4">
+            <div className="relative cursor-pointer group" onClick={() => fileRef.current?.click()}>
+              {photoPreview ? (
+                <img src={photoPreview} alt="" className="w-28 h-28 rounded-2xl object-cover ring-4 ring-primary-100 dark:ring-primary-800 shadow-xl" />
+              ) : (
+                <Avatar name={user?.name} size="xl" radius="2xl" className="!w-28 !h-28 ring-4 ring-primary-100 dark:ring-primary-800 shadow-xl" />
+              )}
+              <div className="absolute inset-0 bg-black/40 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <FaCamera className="text-white text-2xl" />
+              </div>
+            </div>
+            <input ref={fileRef} type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
+            <p className="text-xs text-slate-400 mt-2">انقر لتغيير الصورة (5MB كحد أقصى)</p>
+          </div>
+
           <div>
             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-2">
               <FaUserGraduate className="text-primary-500" /> {t('becomeTutor.bioLabel')}
@@ -98,7 +156,7 @@ export default function BecomeTutor() {
                 <FaMoneyBillWave className="text-primary-500" /> السعر للساعة
               </label>
               <div className="relative">
-                <input type="number" name="ratePerHour" className="input-field pl-12" value={form.ratePerHour} onChange={handleChange} required min={1} placeholder="٠" />
+                <input type="number" name="ratePerHour" className="input-field" value={form.ratePerHour} onChange={handleChange} required min={1} placeholder="٠" />
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">درهم</span>
               </div>
             </div>
@@ -130,6 +188,7 @@ export default function BecomeTutor() {
               <p className="text-xs text-slate-400 mt-1">اختر منطقتك لعرض أدق للطلاب</p>
             </div>
           </div>
+
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center gap-2">
@@ -198,7 +257,7 @@ export default function BecomeTutor() {
                   <FaStar className="text-amber-500" /> سعر الحصة التجريبية
                 </label>
                 <div className="relative">
-                  <input type="number" name="trialPrice" className="input-field pl-12"
+                  <input type="number" name="trialPrice" className="input-field"
                     value={form.trialPrice}
                     onChange={(e) => setForm({ ...form, trialPrice: e.target.value })}
                     min={1} placeholder="اختياري — يحسب تلقائياً ٥٠٪ من السعر العادي" />
@@ -212,8 +271,15 @@ export default function BecomeTutor() {
             )}
           </div>
 
-          <button type="submit" className="btn-primary w-full text-lg">
-            {editing ? 'تحديث الملف الشخصي' : 'إنشاء الملف الشخصي'}
+          <button type="submit" disabled={uploading} className="btn-primary w-full text-lg">
+            {uploading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                جارٍ رفع الصورة...
+              </span>
+            ) : (
+              editing ? 'تحديث الملف الشخصي' : 'إنشاء الملف الشخصي'
+            )}
           </button>
         </form>
       </div>

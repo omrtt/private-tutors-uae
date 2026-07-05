@@ -4,6 +4,7 @@ const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const connectDB = require('./config/db');
+const multer = require('multer');
 
 // Connect to MongoDB
 connectDB();
@@ -19,6 +20,38 @@ app.use(helmet({
 app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
+
+// File upload config
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '..', 'frontend', 'dist', 'uploads');
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `tutor-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`);
+  },
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only image files are allowed'));
+  },
+});
+app.post('/api/upload', require('./middleware/auth').protect, upload.single('photo'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+    const url = `/uploads/${req.file.filename}`;
+    // Update tutor photo
+    const Tutor = require('./models/Tutor');
+    await Tutor.findOneAndUpdate({ user: req.user._id }, { photo: url });
+    res.json({ url });
+  } catch (err) {
+    res.status(500).json({ message: 'Upload failed' });
+  }
+});
 
 // Rate limiting (applied per-route)
 const rateLimit = require('express-rate-limit');
@@ -51,6 +84,22 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/schedule', require('./routes/schedule'));
 app.use('/api/level-tests', require('./routes/levelTests'));
 app.use('/api/institutes', require('./routes/institutes'));
+
+// Public stats endpoint
+const User = require('./models/User');
+const Booking = require('./models/Booking');
+app.get('/api/stats', async (req, res) => {
+  try {
+    const [tutorCount, studentCount, completedSessions] = await Promise.all([
+      User.countDocuments({ role: 'tutor' }),
+      User.countDocuments({ role: 'student' }),
+      Booking.countDocuments({ status: 'completed' }),
+    ]);
+    res.json({ tutorCount, studentCount, completedSessions });
+  } catch (err) {
+    res.json({ tutorCount: 0, studentCount: 0, completedSessions: 0 });
+  }
+});
 
 // Public settings endpoint (no auth required)
 const Settings = require('./models/Settings');

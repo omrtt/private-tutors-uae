@@ -23,7 +23,7 @@ const testIcons = {
 
 export default function TutorList() {
   const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [tutors, setTutors] = useState([]);
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(1);
@@ -31,23 +31,34 @@ export default function TutorList() {
   const [showFilters, setShowFilters] = useState(false);
   const [tests, setTests] = useState([]);
 
-  const [filters, setFilters] = useState({
+  const getInitialFilters = () => ({
     subject: searchParams.get('subject') || '',
     test: searchParams.get('test') || '',
-    emirate: '',
-    area: '',
-    minRate: '',
-    maxRate: '',
-    minRating: '',
-    teachingMode: '',
-    sort: '',
+    emirate: searchParams.get('emirate') || '',
+    area: searchParams.get('area') || '',
+    minRate: searchParams.get('minRate') || '',
+    maxRate: searchParams.get('maxRate') || '',
+    minRating: searchParams.get('minRating') || '',
+    teachingMode: searchParams.get('teachingMode') || '',
+    sort: searchParams.get('sort') || '',
     search: searchParams.get('search') || '',
-    page: 1,
+    page: parseInt(searchParams.get('page'), 10) || 1,
   });
+
+  const [filters, setFilters] = useState(getInitialFilters);
 
   useEffect(() => {
     axios.get('/api/tests').then((res) => setTests(res.data)).catch(() => {});
   }, []);
+
+  // Sync filters to URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([k, v]) => {
+      if (v && v !== '0' && v !== 0) params.set(k, String(v));
+    });
+    setSearchParams(params, { replace: true });
+  }, [filters, setSearchParams]);
 
   useEffect(() => {
     setLoading(true);

@@ -51,6 +51,11 @@ const updateProfileSchema = z.object({
   phone: z.string().optional(),
 });
 
+const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, 'Current password is required'),
+  newPassword: z.string().min(6, 'New password must be at least 6 characters').max(128),
+});
+
 // ─── Booking Schemas ───────────────────────────────────────────────
 
 const createBookingSchema = z.object({
@@ -96,6 +101,7 @@ module.exports = {
   forgotPasswordSchema,
   resetPasswordSchema,
   updateProfileSchema,
+  changePasswordSchema,
   createBookingSchema,
   createTutorProfileSchema,
   updateSettingsSchema,

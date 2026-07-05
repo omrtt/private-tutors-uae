@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
 // ─── Tutor Schema ──────────────────────────────────────────────────
 const tutorSchema = new mongoose.Schema({
   user: { type: String, required: true },
+  photo: { type: String, default: '' },
   bio: { type: String, default: '' },
   subjects: [{ type: String }],
   qualifications: [{ type: String }],

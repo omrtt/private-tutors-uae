@@ -45,6 +45,7 @@ export default function Dashboard() {
   const [newPost, setNewPost] = useState('');
   const [newPostMedia, setNewPostMedia] = useState('');
   const [posting, setPosting] = useState(false);
+  const [bookingSearch, setBookingSearch] = useState('');
 
   useEffect(() => {
     if (user?.role === 'tutor') {
@@ -98,6 +99,20 @@ export default function Dashboard() {
     try {
       await axios.delete(`/api/academic/${id}`);
       await refreshRecords();
+    } catch {}
+  };
+
+  const markAllNotificationsRead = async () => {
+    try {
+      await axios.put('/api/notifications/read-all');
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    } catch {}
+  };
+
+  const markNotificationRead = async (id) => {
+    try {
+      await axios.put(`/api/notifications/${id}/read`);
+      setNotifications((prev) => prev.map((n) => n._id === id ? { ...n, read: true } : n));
     } catch {}
   };
 
@@ -209,14 +224,25 @@ export default function Dashboard() {
               <div className="absolute left-0 top-full mt-2 w-72 sm:w-80 max-w-[90vw] bg-white rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden">
                 <div className="p-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                   <h3 className="font-bold text-sm text-slate-900 dark:text-white">الإشعارات</h3>
-                  <button onClick={() => setShowAllNotifications(false)} className="text-slate-400 hover:text-slate-600 text-sm">✕</button>
+                  <div className="flex items-center gap-2">
+                    {pendingNotifications.length > 0 && (
+                      <button onClick={markAllNotificationsRead} className="text-xs text-primary-500 hover:text-primary-600 font-semibold transition">
+                        تحديد الكل مقروء
+                      </button>
+                    )}
+                    <button onClick={() => setShowAllNotifications(false)} className="text-slate-400 hover:text-slate-600 text-sm">✕</button>
+                  </div>
                 </div>
                 <div className="max-h-72 overflow-y-auto">
                   {notifications.length === 0 ? (
                     <p className="text-center text-slate-400 py-6 text-sm">لا توجد إشعارات</p>
                   ) : (
                     notifications.slice(0, 10).map((n) => (
-                      <div key={n._id} className={`p-3 border-b border-slate-50 dark:border-slate-800/50 text-sm cursor-pointer transition ${n.read ? 'opacity-60' : 'bg-primary-50/30'}`}>
+                      <div
+                        key={n._id}
+                        onClick={() => !n.read && markNotificationRead(n._id)}
+                        className={`p-3 border-b border-slate-50 dark:border-slate-800/50 text-sm cursor-pointer transition ${n.read ? 'opacity-60' : 'bg-primary-50/30 hover:bg-primary-100/50'}`}
+                      >
                         <p className={`text-slate-800 dark:text-slate-200 ${n.read ? 'font-normal' : 'font-semibold'}`}>{n.message}</p>
                         <p className="text-xs text-slate-400 mt-1">{new Date(n.createdAt).toLocaleDateString('ar-AE')}</p>
                       </div>
@@ -603,10 +629,22 @@ export default function Dashboard() {
 
       {/* Bookings List */}
       <div className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl shadow-card p-6">
-        <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-slate-900 dark:text-white">
-          <FaBookmark className="text-primary-500" /> الحجوزات
-          <span className="text-slate-400 dark:text-slate-500 text-sm font-normal">({bookings.length})</span>
-        </h2>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+          <h2 className="text-lg font-bold flex items-center gap-2 text-slate-900 dark:text-white">
+            <FaBookmark className="text-primary-500" /> الحجوزات
+            <span className="text-slate-400 dark:text-slate-500 text-sm font-normal">({bookings.length})</span>
+          </h2>
+          <div className="relative w-full sm:w-56">
+            <input
+              type="text"
+              value={bookingSearch}
+              onChange={(e) => setBookingSearch(e.target.value)}
+              placeholder="بحث في الحجوزات..."
+              className="input-field !py-1.5 !pe-8 text-sm"
+            />
+            <FaSearch className="absolute end-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs" />
+          </div>
+        </div>
         {loading.bookings ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
@@ -631,7 +669,14 @@ export default function Dashboard() {
           />
         ) : (
           <div className="space-y-3">
-            {bookings.map((b) => {
+            {bookings.filter((b) => {
+              if (!bookingSearch.trim()) return true;
+              const q = bookingSearch.toLowerCase();
+              return (b.subject?.toLowerCase().includes(q) ||
+                b.tutor?.user?.name?.toLowerCase().includes(q) ||
+                b.student?.name?.toLowerCase().includes(q) ||
+                b.status?.includes(q));
+            }).map((b) => {
               const config = statusConfig[b.status] || statusConfig.pending;
               const StatusIcon = config.icon;
               const progress = statusProgress[b.status] || 0;

@@ -53,7 +53,7 @@ export default function TutorCard({ tutor, index }) {
             <div className="flex items-start gap-4">
               <div className="relative shrink-0">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 flex items-center justify-center overflow-hidden ring-2 ring-primary-100 dark:ring-primary-800 group-hover:ring-primary-300 dark:group-hover:ring-primary-600 transition-all duration-300">
-                  <Avatar name={userData?.name} size="md" radius="none" className="!w-12 !h-12 !rounded-xl" />
+                  <Avatar name={userData?.name} src={tutor.photo} size="md" radius="none" className="!w-14 !h-14 !rounded-2xl" />
                 </div>
                 {isVerified && (
                   <div className="absolute -bottom-0.5 -right-0.5 bg-white dark:bg-slate-800 rounded-full p-0.5 shadow-sm">

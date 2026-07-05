@@ -118,9 +118,18 @@ export default function TutorProfile() {
   };
 
   if (loading || !tutor) return (
-    <div className="text-center py-32">
-      <div className="w-12 h-12 border-4 border-slate-200 border-t-primary-500 rounded-full animate-spin mx-auto mb-4" />
-      <p className="text-slate-400">{t('tutorProfile.loadingProfile')}</p>
+    <div className="max-w-6xl mx-auto px-4 py-10 md:py-14">
+      <div className="animate-pulse space-y-6">
+        <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-48" />
+        <div className="flex flex-col md:flex-row items-start md:items-end gap-6">
+          <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-slate-200 dark:bg-slate-700" />
+          <div className="flex-1 space-y-3">
+            <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded w-64" />
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-96" />
+            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-48" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 
@@ -166,8 +175,12 @@ export default function TutorProfile() {
             { label: tutorData.name || t('tutorProfile.seoTitle'), class: 'text-white/90' },
           ]} />
           <div className="flex flex-col md:flex-row items-start md:items-end gap-6 mt-4">
-            <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-4xl md:text-5xl font-extrabold text-white shrink-0 ring-4 ring-white/30 shadow-xl">
-              {tutorData.name?.charAt(0) || t('tutorProfile.nameFallback')}
+            <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-4xl md:text-5xl font-extrabold text-white shrink-0 ring-4 ring-white/30 shadow-xl overflow-hidden">
+              {tutor.photo ? (
+                <img src={tutor.photo} alt={tutorData.name} className="w-full h-full object-cover" />
+              ) : (
+                tutorData.name?.charAt(0) || t('tutorProfile.nameFallback')
+              )}
             </div>
             <div className="flex-1 text-white">
               <div className="flex flex-wrap items-center gap-3">

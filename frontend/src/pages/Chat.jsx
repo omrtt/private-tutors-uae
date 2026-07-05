@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaPaperPlane, FaSearch, FaComment, FaInbox, FaUserCircle, FaRegSmile, FaPhone, FaVideo } from 'react-icons/fa';
+import { FaPaperPlane, FaSearch, FaComment, FaInbox, FaUserCircle, FaRegSmile, FaPhone, FaVideo, FaCheck } from 'react-icons/fa';
 import Avatar from '../components/Avatar';
 import SEO from '../components/SEO';
 

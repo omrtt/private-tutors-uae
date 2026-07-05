@@ -204,17 +204,17 @@ export default function LevelTest() {
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2">
-              {tests.map((t, i) => {
-                const Icon = subjectIcons[t.subject] || FaGraduationCap;
-                const sc = subjectColors[t.subject] || subjectColors['الرياضيات'];
+              {tests.map((test, i) => {
+                const Icon = subjectIcons[test.subject] || FaGraduationCap;
+                const sc = subjectColors[test.subject] || subjectColors['الرياضيات'];
                 return (
                   <motion.button
-                    key={t._id}
+                    key={test._id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.07 }}
                     whileHover={{ y: -3 }}
-                    onClick={() => startTest(t.subject)}
+                    onClick={() => startTest(test.subject)}
                     className="relative overflow-hidden bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 text-right group"
                   >
                     <div className={`absolute top-0 start-0 w-1.5 h-full bg-gradient-to-b ${sc.from} ${sc.to}`} />
@@ -223,10 +223,10 @@ export default function LevelTest() {
                         <div className={`w-12 h-12 rounded-2xl ${sc.bg} flex items-center justify-center ${sc.text} group-hover:scale-110 transition-transform`}>
                           <Icon className="text-xl" />
                         </div>
-                        <span className="text-xs text-slate-400 bg-slate-50 px-2.5 py-1 rounded-lg">{t('levelTest.approximately')} {Math.ceil(t.questionCount * 60 / 60)} {t('common.minutes')}</span>
+                        <span className="text-xs text-slate-400 bg-slate-50 px-2.5 py-1 rounded-lg">{t('levelTest.approximately')} {Math.ceil(test.questionCount * 60 / 60)} {t('common.minutes')}</span>
                       </div>
-                      <h3 className="font-bold text-slate-900 mb-1">{t.subject}</h3>
-                      <p className="text-xs text-slate-400 mb-4">{t.questionCount} {t('levelTest.questions')}</p>
+                      <h3 className="font-bold text-slate-900 mb-1">{test.subject}</h3>
+                      <p className="text-xs text-slate-400 mb-4">{test.questionCount} {t('levelTest.questions')}</p>
                       <div className={`inline-flex items-center gap-1.5 text-xs font-bold ${sc.text} ${sc.bg} px-3 py-1.5 rounded-lg`}>
                         {t('levelTest.startTest')} <FaArrowRight className="text-[10px]" />
                       </div>

@@ -3,11 +3,12 @@ import {
   FaSearch, FaUserGraduate, FaShieldAlt, FaStar, FaArrowLeft,
   FaGraduationCap, FaPlusCircle, FaQuoteRight, FaUsers, FaBookOpen,
   FaFlask, FaLaptopCode, FaBook, FaLanguage, FaDna, FaChartLine,
-  FaCheckCircle, FaCertificate, FaAward
+  FaCheckCircle, FaCertificate, FaAward, FaClock, FaQuestionCircle,
+  FaChevronDown
 } from 'react-icons/fa';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import TutorCard from '../components/TutorCard';
 import Banner from '../components/Banner';
@@ -33,6 +34,42 @@ const testimonials = [
   { name: 'محمد آل علي', role: 'طالب جامعي', text: 'ساعدني المدرّس في فهم مواد الفيزياء المتقدمة. المنصة سهلة الاستخدام والتواصل مع المدرّسين كان سلساً.', rating: 4, emirate: 'الشارقة' },
 ];
 
+function FaqItem({ question, answer, index }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.06 }}
+      className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl overflow-hidden shadow-card"
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between p-5 text-right"
+      >
+        <span className="font-bold text-slate-900 dark:text-white text-sm">{question}</span>
+        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-slate-400 shrink-0 mr-3">
+          <FaChevronDown className="text-xs" />
+        </motion.span>
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <p className="px-5 pb-5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{answer}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 function AnimatedCounter({ from = 0, to, suffix = '', duration = 2 }) {
   const [count, setCount] = useState(from);
   const ref = useRef(null);
@@ -57,6 +94,7 @@ export default function Home() {
   const { t } = useTranslation();
   const [topTutors, setTopTutors] = useState([]);
   const [tests, setTests] = useState([]);
+  const [stats, setStats] = useState({ tutorCount: 0, studentCount: 0, completedSessions: 0 });
   const [search, setSearch] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [testimonialIndex, setTestimonialIndex] = useState(0);
@@ -64,6 +102,7 @@ export default function Home() {
   useEffect(() => {
     axios.get('/api/tutors?limit=6').then((res) => setTopTutors(res.data.tutors)).catch(() => {});
     axios.get('/api/tests').then((res) => setTests(res.data)).catch(() => {});
+    axios.get('/api/stats').then((res) => setStats(res.data)).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -129,7 +168,7 @@ export default function Home() {
             className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 text-sm text-white/90 shadow-lg mb-8"
           >
             <FaStar className="text-amber-300 text-xs" />
-            <span>{t('home.heroBadge', { total: 10 })}</span>
+            <span>{t('home.heroBadge', { total: stats.tutorCount || 10 })}</span>
           </motion.div>
 
           <motion.h1
@@ -334,12 +373,12 @@ export default function Home() {
         </div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { icon: FaUserGraduate, value: 150, suffix: '+', label: t('home.statCertifiedTutors') },
-              { icon: FaUsers, value: 1200, suffix: '+', label: t('home.statRegisteredStudents') },
-              { icon: FaBookOpen, value: 850, suffix: '+', label: t('home.statCompletedSessions') },
-              { icon: FaStar, value: 4.8, suffix: '', label: t('home.statAverageRating') },
-            ].map((stat, i) => (
+              {[
+                { icon: FaUserGraduate, value: stats.tutorCount || 150, suffix: '+', label: t('home.statCertifiedTutors') },
+                { icon: FaUsers, value: stats.studentCount || 1200, suffix: '+', label: t('home.statRegisteredStudents') },
+                { icon: FaBookOpen, value: stats.completedSessions || 850, suffix: '+', label: t('home.statCompletedSessions') },
+                { icon: FaStar, value: 4.8, suffix: '', label: t('home.statAverageRating') },
+              ].map((stat, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -429,6 +468,61 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </motion.section>
+
+      {/* Trust Badges */}
+      <motion.section {...fadeUp(0.1)} className="max-w-7xl mx-auto px-4 pb-20">
+        <div className="text-center mb-12">
+          <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/20">
+            <FaShieldAlt className="text-white text-xl" />
+          </div>
+          <h2 className="section-title mb-2">{t('home.whyChooseUs')}</h2>
+          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">{t('home.whyChooseUsDesc')}</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { icon: FaCheckCircle, title: t('home.trustVerified'), desc: t('home.trustVerifiedDesc') },
+            { icon: FaShieldAlt, title: t('home.trustSecure'), desc: t('home.trustSecureDesc') },
+            { icon: FaClock, title: t('home.trustFlexible'), desc: t('home.trustFlexibleDesc') },
+            { icon: FaStar, title: t('home.trustQuality'), desc: t('home.trustQualityDesc') },
+          ].map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+              className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl p-5 text-center shadow-card hover:shadow-card-hover transition-all duration-300"
+            >
+              <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <item.icon className="text-emerald-500 text-lg" />
+              </div>
+              <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">{item.title}</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* FAQ Section */}
+      <motion.section {...fadeUp(0.1)} className="max-w-4xl mx-auto px-4 pb-20">
+        <div className="text-center mb-12">
+          <div className="w-14 h-14 bg-gradient-to-br from-violet-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-violet-500/20">
+            <FaQuestionCircle className="text-white text-xl" />
+          </div>
+          <h2 className="section-title mb-2">{t('home.faqTitle')}</h2>
+          <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">{t('home.faqDesc')}</p>
+        </div>
+        <div className="space-y-3">
+          {[
+            { q: t('home.faq1q'), a: t('home.faq1a') },
+            { q: t('home.faq2q'), a: t('home.faq2a') },
+            { q: t('home.faq3q'), a: t('home.faq3a') },
+            { q: t('home.faq4q'), a: t('home.faq4a') },
+          ].map((faq, i) => (
+            <FaqItem key={i} question={faq.q} answer={faq.a} index={i} />
+          ))}
+        </div>
+        <div className="text-center mt-6">
+          <Link to="/faq" className="btn-outline inline-flex items-center gap-2 text-sm">
+            {t('home.viewAllFaq')} <FaArrowLeft className="text-xs" />
+          </Link>
         </div>
       </motion.section>
 
