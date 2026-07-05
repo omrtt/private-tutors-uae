@@ -16,6 +16,7 @@ app.use(helmet({
   contentSecurityPolicy: false, // Disabled for frontend proxy in dev
 }));
 
+app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
 

@@ -18,7 +18,7 @@ echo Starting server...
 echo.
 echo Open http://localhost:5000 in your browser
 echo.
-echo Login: student@test.ae / password123
+echo Login: phone 0500000000 / test1234  (student@test.ae)
 echo.
 node server.js
 pause
